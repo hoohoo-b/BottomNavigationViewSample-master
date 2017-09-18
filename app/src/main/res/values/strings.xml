@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Bottom Navigation Sample</string>
+
+    <string name="text_favourite">Favourite</string>
+    <string name="text_recipe">Recipe</string>
+    <string name="text_activity">Activity</string>
+    <string name="text_me">Me</string>
+</resources>
