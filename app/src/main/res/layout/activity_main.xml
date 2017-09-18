@@ -4,28 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/text_favorites"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/text_recipe" />
-
-    <TextView
-        android:id="@+id/text_schedules"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/text_favourite"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/text_music"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/text_activity"
-        android:visibility="gone" />
+    <fragment
+        android:id="@+id/fragmentp"
+        android:name="bottomnav.hitherejoe.com.bottomnavigationsample.Frag1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_navigation"

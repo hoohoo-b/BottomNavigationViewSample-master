@@ -2,6 +2,9 @@ package bottomnav.hitherejoe.com.bottomnavigationsample;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -10,18 +13,12 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView textFavorites;
-    private TextView textSchedules;
-    private TextView textMusic;
+    private Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        textFavorites = (TextView) findViewById(R.id.text_favorites);
-        textSchedules = (TextView) findViewById(R.id.text_schedules);
-        textMusic = (TextView) findViewById(R.id.text_music);
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.bottom_navigation);
@@ -32,19 +29,19 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.action_recipe:
-                                textFavorites.setVisibility(View.VISIBLE);
-                                textSchedules.setVisibility(View.GONE);
-                                textMusic.setVisibility(View.GONE);
+                                fragment = new Frag1();
+                                FragmentManager fm = getSupportFragmentManager();
+                                FragmentTransaction ft = fm.beginTransaction();
+                                ft.replace(R.id.fragmentp, fragment);
+                                ft.commit();
                                 break;
-                            case R.id.action_favourite:
-                                textFavorites.setVisibility(View.GONE);
-                                textSchedules.setVisibility(View.VISIBLE);
-                                textMusic.setVisibility(View.GONE);
+                            case R.id.action_favourite:fragment = new Frag2();
+                                fm = getSupportFragmentManager();
+                                ft = fm.beginTransaction();
+                                ft.replace(R.id.fragmentp, fragment);
+                                ft.commit();
                                 break;
-                            case R.id.action_upload:
-                                textFavorites.setVisibility(View.GONE);
-                                textSchedules.setVisibility(View.GONE);
-                                textMusic.setVisibility(View.VISIBLE);
+                            default:
                                 break;
                         }
                         return false;
