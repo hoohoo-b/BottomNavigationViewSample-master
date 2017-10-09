@@ -5,20 +5,23 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.*;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Frag1.OnFragmentInteractionListener} interface
+ * {@link BlankFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Frag1#newInstance} factory method to
+ * Use the {@link BlankFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Frag2 extends Fragment {
 
-    public static Frag2 newInstance() {
-        Frag2 fragment = new Frag2();
+public class BlankFragment extends Fragment {
+//    Button Setting = (Button)findViewById(R.id.open_activity_button);
+
+    public static BlankFragment newInstance() {
+        BlankFragment fragment = new BlankFragment();
         return fragment;
     }
 
@@ -31,7 +34,7 @@ public class Frag2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favourite, container, false);
+        return inflater.inflate(R.layout.fragment_blank, container, false);
     }
 
 

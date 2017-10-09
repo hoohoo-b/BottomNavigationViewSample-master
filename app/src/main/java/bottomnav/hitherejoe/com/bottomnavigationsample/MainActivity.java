@@ -41,6 +41,12 @@ public class MainActivity extends AppCompatActivity {
                                 ft.replace(R.id.fragmentp, fragment);
                                 ft.commit();
                                 break;
+                            case R.id.action_me:fragment = new BlankFragment();
+                                fm = getSupportFragmentManager();
+                                ft = fm.beginTransaction();
+                                ft.replace(R.id.fragmentp, fragment);
+                                ft.commit();
+                                break;
                             default:
                                 break;
                         }
