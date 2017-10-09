@@ -22,6 +22,7 @@ public class BlankFragment extends Fragment implements View.OnClickListener {
 //    Button Setting = (Button)findViewById(R.id.open_activity_button);
 
     private static Button btn_settings;
+    private static Button btn_logout;
 
     public static BlankFragment newInstance() {
         BlankFragment fragment = new BlankFragment();
@@ -40,6 +41,8 @@ public class BlankFragment extends Fragment implements View.OnClickListener {
         View myView = inflater.inflate(R.layout.fragment_blank, container, false);
         btn_settings = (Button) myView.findViewById(R.id.btn_settings);
         btn_settings.setOnClickListener(this);
+        btn_logout = (Button) myView.findViewById(R.id.btn_logout);
+        btn_logout.setOnClickListener(this);
 
         return myView;
     }
@@ -47,7 +50,13 @@ public class BlankFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(getActivity(), SettingsActivity.class);
-        startActivity(intent);
+
+        switch (v.getId()) {
+            case R.id.btn_settings:
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                break;
+            case R.id.btn_logout:
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+        }
     }
 }
