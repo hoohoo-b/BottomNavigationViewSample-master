@@ -1,5 +1,6 @@
 package bottomnav.hitherejoe.com.bottomnavigationsample;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,8 +18,10 @@ import android.widget.*;
  * create an instance of this fragment.
  */
 
-public class BlankFragment extends Fragment {
+public class BlankFragment extends Fragment implements View.OnClickListener {
 //    Button Setting = (Button)findViewById(R.id.open_activity_button);
+
+    private static Button btn_settings;
 
     public static BlankFragment newInstance() {
         BlankFragment fragment = new BlankFragment();
@@ -34,8 +37,17 @@ public class BlankFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_blank, container, false);
+        View myView = inflater.inflate(R.layout.fragment_blank, container, false);
+        btn_settings = (Button) myView.findViewById(R.id.btn_settings);
+        btn_settings.setOnClickListener(this);
+
+        return myView;
     }
 
 
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(getActivity(), SettingsActivity.class);
+        startActivity(intent);
+    }
 }
