@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -127,26 +128,33 @@ public class MainActivity extends AppCompatActivity {
             String json = params[2];
 
             String output;
-            ArrayList<String> listData = new ArrayList<String>();
             String[] recipeListData = null;
 
             try {
                 output = NetworkUtils.getResponseFromHttpUrl(urlString, requestMethod, json);
-
-                JSONObject recipeListJson = new JSONObject(output);
-                JSONArray recipeData = recipeListJson.getJSONArray("data");
-                if (recipeData != null) {
-                    for (int i = 0; i < recipeData.length(); i++) {
-                        JSONObject recipeJson = recipeData.getJSONObject(i);
-                        listData.add(recipeJson.getString("name"));
-                    }
-                    recipeListData = listData.toArray(new String[listData.size()]);
-                }
+                recipeListData = retrieveRecipeNameList(output);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             return recipeListData;
         }
+
+        private String[] retrieveRecipeNameList(String output) throws JSONException {
+            ArrayList<String> listData = new ArrayList<String>();
+            JSONObject recipeListJson = new JSONObject(output);
+            String[] recipeListData = null;
+
+            JSONArray recipeData = recipeListJson.getJSONArray("data");
+            if (recipeData != null) {
+                for (int i = 0; i < recipeData.length(); i++) {
+                    JSONObject recipeJson = recipeData.getJSONObject(i);
+                    listData.add(recipeJson.getString("name"));
+                }
+                recipeListData = listData.toArray(new String[listData.size()]);
+            }
+            return recipeListData;
+        }
+
 
         @Override
         protected void onPostExecute(String[] recipeListData) {
