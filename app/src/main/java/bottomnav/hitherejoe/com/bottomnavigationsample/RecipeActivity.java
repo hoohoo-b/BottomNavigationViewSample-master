@@ -10,15 +10,15 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Frag1.OnFragmentInteractionListener} interface
+ * {@link RecipeActivity.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Frag1#newInstance} factory method to
+ * Use the {@link RecipeActivity#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Frag2 extends Fragment {
+public class RecipeActivity extends Fragment {
 
-    public static Frag2 newInstance() {
-        Frag2 fragment = new Frag2();
+    public static RecipeActivity newInstance() {
+        RecipeActivity fragment = new RecipeActivity();
         return fragment;
     }
 
@@ -31,7 +31,7 @@ public class Frag2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favourite, container, false);
+        return inflater.inflate(R.layout.fragment_recipe, container, false);
     }
 
 
