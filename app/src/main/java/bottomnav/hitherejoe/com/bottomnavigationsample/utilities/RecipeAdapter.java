@@ -84,7 +84,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
         String recipeList = mRecipeListData[position];
         String recipeName = "";
         String imageURL = "";
-        Bitmap imageBitmap = null;
 
         try {
             recipeName = JsonReader.retrieveRecipeName(recipeList);
@@ -92,15 +91,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
         } catch (JSONException e) {
             e.printStackTrace();
         }
-//        new ImageUrlToBitmap().execute(imageURL);
 
         Picasso.with(context)
                 .load(imageURL)
                 .into(holder.mRecipeListImageView);
 
         holder.mRecipeListTextView.setText(recipeName);
-//        holder.mRecipeListImageView.setImageBitmap(imageBitmap);
-//        Picasso.with(context).load(imageURL).into(imageView);
 
     }
 
@@ -115,27 +111,5 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
     public void setRecipeNameListData(String[] recipeListData) {
         mRecipeListData = recipeListData;
         notifyDataSetChanged();
-    }
-
-
-    public class ImageUrlToBitmap extends AsyncTask<String, Void, Bitmap> {
-
-        @Override
-        protected Bitmap doInBackground(String... args) {
-
-            try {
-
-                return BitmapFactory.decodeStream((InputStream) new URL(args[0]).getContent());
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap imageBitmap) {
-
-        }
     }
 }
