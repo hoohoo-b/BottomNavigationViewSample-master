@@ -1,5 +1,8 @@
 package bottomnav.hitherejoe.com.bottomnavigationsample;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,26 +13,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
+import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.JsonReader;
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.NetworkUtils;
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.RecipeAdapter;
 
 import static android.R.id.list;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecipeAdapter.ListItemClickListener {
 
-
+    private static final int NUM_LIST_ITEMS = 100;
     private static Button btn_settings;
     private Fragment fragment;
 
@@ -52,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mRecipeAdapter = new RecipeAdapter();
+        mRecipeAdapter = new RecipeAdapter(this ,NUM_LIST_ITEMS, this);
         mRecyclerView.setAdapter(mRecipeAdapter);
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
@@ -96,10 +104,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadRecipeListData() {
         showRecipeListDataView();
-        callApi();
+        getRecipeNameList();
     }
 
-    private void callApi() {
+    private void getRecipeNameList() {
         new FetchRecipeList().execute("https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/list/", "GET", "");
     }
 
@@ -128,31 +136,15 @@ public class MainActivity extends AppCompatActivity {
             String json = params[2];
 
             String output;
-            String[] recipeListData = null;
+            String[] recipeList = null;
 
             try {
                 output = NetworkUtils.getResponseFromHttpUrl(urlString, requestMethod, json);
-                recipeListData = retrieveRecipeNameList(output);
+                recipeList = JsonReader.retrieveRecipeList(output);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return recipeListData;
-        }
-
-        private String[] retrieveRecipeNameList(String output) throws JSONException {
-            ArrayList<String> listData = new ArrayList<String>();
-            JSONObject recipeListJson = new JSONObject(output);
-            String[] recipeListData = null;
-
-            JSONArray recipeData = recipeListJson.getJSONArray("data");
-            if (recipeData != null) {
-                for (int i = 0; i < recipeData.length(); i++) {
-                    JSONObject recipeJson = recipeData.getJSONObject(i);
-                    listData.add(recipeJson.getString("name"));
-                }
-                recipeListData = listData.toArray(new String[listData.size()]);
-            }
-            return recipeListData;
+            return recipeList;
         }
 
 
@@ -161,17 +153,16 @@ public class MainActivity extends AppCompatActivity {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (recipeListData != null) {
                 showRecipeListDataView();
-                                /*
-                 * Iterate through the array and append the Strings to the TextView. The reason why we add
-                 * the "\n\n\n" after the String is to give visual separation between each String in the
-                 * TextView. Later, we'll learn about a better way to display lists of data.
-                 */
-                mRecipeAdapter.setRecipeListData(recipeListData);
+                mRecipeAdapter.setRecipeNameListData(recipeListData);
             } else {
                 showErrorMessage();
             }
         }
 
+    }
+
+    public void onListItemClick(int clickedItemIndex) {
+        setContentView(R.layout.fragment_recipe_details);
     }
 
 }
