@@ -26,7 +26,6 @@ import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationViewPager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,10 +34,8 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.BottomBarAdapter;
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.JsonReader;
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.NetworkUtils;
-import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.NoSwipePager;
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.RecipeAdapter;
 
 import static android.R.id.list;
@@ -58,9 +55,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
 
     private ProgressBar mLoadingIndicator;
 
-    private NoSwipePager viewPager;
-    private BottomBarAdapter pageAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,13 +71,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         mRecyclerView.setAdapter(mRecipeAdapter);
 
         AHBottomNavigation bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
-        viewPager = (NoSwipePager) findViewById(R.id.view_pager);
-        viewPager.setPagingEnabled(false);
-        viewPager.setAdapter(pageAdapter);
-
-        DemoFragment fragment = new DemoFragment();
-        pageAdapter.addFragments(fragment);
-
 
 // Create items
         AHBottomNavigationItem item1 = new AHBottomNavigationItem("Recipe", R.drawable.ic_free_breakfast_black_24dp, R.color.colorAccent);
@@ -99,16 +86,25 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         bottomNavigation.addItem(item4);
         bottomNavigation.addItem(item5);
 
-        bottomNavigation.setCurrentItem(0);
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_HIDE);
 
         bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
-                // Do something cool here...
+                if (position==0)
+                {
+                    RecipeActivity crimeFragment=new RecipeActivity();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp,crimeFragment).commit();
+                }else  if (position==1)
+                {
+                    FavouriteActivity dramaFragment=new FavouriteActivity();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp,dramaFragment).commit();
+                }else  if (position==4)
+                {
+                    BlankFragment documentaryFragment=new BlankFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp,documentaryFragment).commit();
+                }
 
-                if (!wasSelected)
-                    viewPager.setCurrentItem(position);
                 return true;
             }
         });

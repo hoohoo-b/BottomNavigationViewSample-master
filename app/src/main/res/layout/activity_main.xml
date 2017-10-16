@@ -4,11 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <bottomnav.hitherejoe.com.bottomnavigationsample.utilities.NoSwipePager
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
     <fragment
         android:id="@+id/fragmentp"
         android:name="bottomnav.hitherejoe.com.bottomnavigationsample.RecipeActivity"
