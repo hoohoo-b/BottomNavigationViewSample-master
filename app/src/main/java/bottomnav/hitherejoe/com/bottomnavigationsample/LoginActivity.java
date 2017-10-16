@@ -30,8 +30,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import javax.security.auth.login.LoginException;
+
+import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.JsonReader;
+import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.NetworkUtils;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -40,9 +50,7 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
+
     private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
@@ -69,7 +77,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -87,8 +94,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         btn_login.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+                attemptLogin();
+//                if(tokenJson != ""){
+//                    System.out.println(tokenJson);
+//                    String tokenString = "";
+//                    try {
+//                        JSONObject tokenJsonObj = new JSONObject(tokenJson);
+//                        tokenString = tokenJsonObj.getString("token");
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//                    intent.putExtra("AuthToken", tokenString);
+//                    startActivity(intent);
+//                }
             }
         });
 
@@ -114,58 +134,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
     }
 
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
-        }
-    }
-
 
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
+    private Boolean attemptLogin(){
+
         if (mAuthTask != null) {
-            return;
+            return false;
         }
 
         // Reset errors.
@@ -197,6 +175,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             cancel = true;
         }
 
+        String tokenJson = "";
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -206,8 +185,32 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // perform the user login attempt.
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+
+            try {
+                tokenJson = mAuthTask.execute((Void) null).get();
+                String tokenString = "";
+
+                JSONObject tokenJsonObj = new JSONObject(tokenJson);
+                tokenString = tokenJsonObj.getString("token");
+
+                System.out.println(tokenString);
+
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.putExtra("AuthToken", tokenString);
+                startActivity(intent);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (JSONException  e) {
+                e.printStackTrace();
+            }
+
         }
+
+        return true;
+
     }
 
     private boolean isEmailValid(String email) {
@@ -314,10 +317,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, String> {
 
         private final String mEmail;
         private final String mPassword;
+        private final String mServerURL = "https://hidden-springs-80932.herokuapp.com/";
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -325,34 +329,28 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
+        protected String doInBackground(Void... params) {
 
+            String authJson = "{\"email\": \"" + mEmail + "\", \"password\": \"" + mPassword + "\"}";
+
+            String tokenString = "";
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
+                tokenString = NetworkUtils.getAuthToken(authJson);
+            } catch (LoginException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
+            return tokenString;
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(String tokenString) {
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
+            if (tokenString != "") {
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
