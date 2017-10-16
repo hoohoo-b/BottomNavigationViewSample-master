@@ -16,6 +16,8 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Scanner;
 
+import javax.security.auth.login.LoginException;
+
 /**
  * These utilities will be used to communicate with the network.
  */
@@ -97,4 +99,45 @@ public class NetworkUtils {
             urlConnection.disconnect();
         }
     }
+
+    public static String getAuthToken(String authJson) throws IOException, LoginException {
+
+        URL url = new URL("https://hidden-springs-80932.herokuapp.com/api/v1.0/login2");
+
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setRequestMethod("POST");
+        urlConnection.setRequestProperty("Content-Type", "application/json");
+
+        OutputStream outputStream = urlConnection.getOutputStream();
+        outputStream.write(authJson.getBytes("UTF-8"));
+        outputStream.close();
+
+        urlConnection.connect();
+        int status = urlConnection.getResponseCode();
+        System.out.println("HTTP Client" + "HTTP status code : " + status);
+        if(status != 200){
+            throw new LoginException("Invalid login");
+        }
+
+        try {
+            InputStream in = urlConnection.getInputStream();
+
+            Scanner scanner = new Scanner(in);
+            scanner.useDelimiter("\\A");
+
+            boolean hasInput = scanner.hasNext();
+            if (hasInput) {
+                return scanner.next();
+            } else {
+                return null;
+            }
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+            return "A problem was encountered";
+        }
+        finally {
+            urlConnection.disconnect();
+        }
+    }
+
 }
