@@ -79,10 +79,10 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         AHBottomNavigation bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
         viewPager = (NoSwipePager) findViewById(R.id.view_pager);
         viewPager.setPagingEnabled(false);
-//        viewPager.setAdapter(pageAdapter);
+        viewPager.setAdapter(pageAdapter);
 
-//        BlankFragment fragment = new BlankFragment();
-//        pageAdapter.addFragments(fragment);
+        DemoFragment fragment = new DemoFragment();
+        pageAdapter.addFragments(fragment);
 
 
 // Create items
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         bottomNavigation.addItem(item4);
         bottomNavigation.addItem(item5);
 
-//        bottomNavigation.setCurrentItem(0);
+        bottomNavigation.setCurrentItem(0);
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_HIDE);
 
         bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
