@@ -7,14 +7,9 @@
     <bottomnav.hitherejoe.com.bottomnavigationsample.utilities.NoSwipePager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <!--<com.aurelhubert.ahbottomnavigation.AHBottomNavigationViewPager
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
         android:layout_height="match_parent"/>
--->
-    <!--<fragment
+
+    <fragment
         android:id="@+id/fragmentp"
         android:name="bottomnav.hitherejoe.com.bottomnavigationsample.RecipeActivity"
         android:layout_width="match_parent"
@@ -41,7 +36,7 @@
             android:layout_gravity="center"
             android:visibility="invisible" />
 
-    </fragment>-->
+    </fragment>
 
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
         android:id="@+id/bottom_navigation"
