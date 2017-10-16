@@ -47,6 +47,7 @@ import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.NetworkUtils;
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     private UserLoginTask mAuthTask = null;
+    private Boolean loginDebugMode = false;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -109,6 +110,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (mAuthTask != null) {
             return false;
         }
+
+        if (loginDebugMode){
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("AuthToken", "32ff65c24c42a5efa074ad4e5804f098bc0f8447");
+            startActivity(intent);
+        }
+
 
         // Reset errors.
         mEmailView.setError(null);
