@@ -1,5 +1,7 @@
 package bottomnav.hitherejoe.com.bottomnavigationsample;
 
+// FOR LOGIN
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;

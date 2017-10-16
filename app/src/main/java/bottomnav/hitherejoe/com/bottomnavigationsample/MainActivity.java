@@ -1,5 +1,7 @@
 package bottomnav.hitherejoe.com.bottomnavigationsample;
 
+// FOR MAIN PAGE AFTER LOGIN
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
@@ -22,6 +24,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,6 +41,8 @@ import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.RecipeAdapter;
 import static android.R.id.list;
 
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.ListItemClickListener {
+
+//    private BottomBar mBottomBar;
 
     private static final int NUM_LIST_ITEMS = 100;
     private static Button btn_settings;
@@ -63,10 +70,73 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         mRecipeAdapter = new RecipeAdapter(this ,NUM_LIST_ITEMS, this);
         mRecyclerView.setAdapter(mRecipeAdapter);
 
-        BottomNavigationView bottomNavigationView = (BottomNavigationView)
-                findViewById(R.id.bottom_navigation);
+        AHBottomNavigation bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(
+// Create items
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem("Recipe", R.drawable.ic_free_breakfast_black_24dp, R.color.colorAccent);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem("Favourites", R.drawable.ic_star_black_24dp, R.color.colorAccent);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem("Upload", R.drawable.ic_add_black_24dp, R.color.colorAccent);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem("Activity", R.drawable.ic_notifications_black_24dp, R.color.colorAccent);
+        AHBottomNavigationItem item5 = new AHBottomNavigationItem("Me", R.drawable.ic_person_black_24dp, R.color.colorAccent);
+
+// Add items
+        bottomNavigation.addItem(item1);
+        bottomNavigation.addItem(item2);
+        bottomNavigation.addItem(item3);
+        bottomNavigation.addItem(item4);
+        bottomNavigation.addItem(item5);
+
+        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_HIDE);
+
+        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
+            @Override
+            public boolean onTabSelected(int position, boolean wasSelected) {
+                if (position==0)
+                {
+                    RecipeActivity crimeFragment=new RecipeActivity();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp,crimeFragment).commit();
+                }else  if (position==1)
+                {
+                    FavouriteActivity dramaFragment=new FavouriteActivity();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp,dramaFragment).commit();
+                }else  if (position==4)
+                {
+                    BlankFragment documentaryFragment=new BlankFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp,documentaryFragment).commit();
+                }
+
+                return true;
+            }
+        });
+        bottomNavigation.setOnNavigationPositionListener(new AHBottomNavigation.OnNavigationPositionListener() {
+            @Override public void onPositionChange(int y) {
+                // Manage the new y position
+            }
+        });
+
+
+/*        mBottomBar = BottomBar.attach(this, savedInstanceState);
+        mBottomBar.setItems(R.menu.bottombar_menu);
+        mBottomBar.setOnMenuTabClickListener(new OnMenuTabClickListener() {
+            @Override
+            public void onMenuTabSelected(@IdRes int menuItemId) {
+                if (resId == R.id.bb_menu_recents) {
+                    // The user selected the "Recents" tab.
+                }
+            }
+
+            @Override
+            public void onMenuTabReSelected(@IdRes int menuItemId) {
+                if (resId == R.id.bb_menu_recents) {
+                    // The user reselected the "Recents" tab. React accordingly.
+                }
+            }
+        });*/
+
+/*        BottomNavigationView bottomNavigationView = (BottomNavigationView)
+                findViewById(R.id.bottom_navigation);*/
+
+/*        bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -97,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
                         }
                         return false;
                     }
-                });
+                });*/
 
         loadRecipeListData();
     }

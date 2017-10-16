@@ -1,5 +1,6 @@
 package bottomnav.hitherejoe.com.bottomnavigationsample;
 
+// FOR SETTINGS
 
 import android.annotation.TargetApi;
 import android.content.Context;
