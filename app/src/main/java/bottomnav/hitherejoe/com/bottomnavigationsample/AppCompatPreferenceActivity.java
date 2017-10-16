@@ -1,5 +1,7 @@
 package bottomnav.hitherejoe.com.bottomnavigationsample;
 
+// FOR THE SETTINGS
+
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;

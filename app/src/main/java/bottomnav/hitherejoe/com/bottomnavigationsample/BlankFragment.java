@@ -1,5 +1,7 @@
 package bottomnav.hitherejoe.com.bottomnavigationsample;
 
+// FOR THE ACCOUNTS ME PAGE
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

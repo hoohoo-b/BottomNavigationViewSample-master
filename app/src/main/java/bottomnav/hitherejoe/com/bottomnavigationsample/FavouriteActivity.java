@@ -1,5 +1,7 @@
 package bottomnav.hitherejoe.com.bottomnavigationsample;
 
+// FOR FAVOURITE ACTIVITY... CURRENTLY BLANK
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
