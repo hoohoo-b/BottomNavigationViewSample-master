@@ -95,20 +95,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onClick(View view) {
                 attemptLogin();
-//                if(tokenJson != ""){
-//                    System.out.println(tokenJson);
-//                    String tokenString = "";
-//                    try {
-//                        JSONObject tokenJsonObj = new JSONObject(tokenJson);
-//                        tokenString = tokenJsonObj.getString("token");
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                    intent.putExtra("AuthToken", tokenString);
-//                    startActivity(intent);
-//                }
             }
         });
 
