@@ -2,6 +2,8 @@ package bottomnav.hitherejoe.com.bottomnavigationsample;
 
 // FOR MAIN PAGE AFTER LOGIN
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mRecipeAdapter = new RecipeAdapter(this ,NUM_LIST_ITEMS, this);
+        mRecipeAdapter = new RecipeAdapter(this, NUM_LIST_ITEMS, this);
         mRecyclerView.setAdapter(mRecipeAdapter);
 
         AHBottomNavigation bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
@@ -91,25 +93,23 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
-                if (position==0)
-                {
-                    RecipeActivity crimeFragment=new RecipeActivity();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp,crimeFragment).commit();
-                }else  if (position==1)
-                {
-                    FavouriteActivity dramaFragment=new FavouriteActivity();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp,dramaFragment).commit();
-                }else  if (position==4)
-                {
-                    BlankFragment documentaryFragment=new BlankFragment();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp,documentaryFragment).commit();
+                if (position == 0) {
+                    RecipeActivity crimeFragment = new RecipeActivity();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, crimeFragment).commit();
+                } else if (position == 1) {
+                    FavouriteActivity dramaFragment = new FavouriteActivity();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, dramaFragment).commit();
+                } else if (position == 4) {
+                    BlankFragment documentaryFragment = new BlankFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, documentaryFragment).commit();
                 }
 
                 return true;
             }
         });
         bottomNavigation.setOnNavigationPositionListener(new AHBottomNavigation.OnNavigationPositionListener() {
-            @Override public void onPositionChange(int y) {
+            @Override
+            public void onPositionChange(int y) {
                 // Manage the new y position
             }
         });
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         loadRecipeListData();
     }
 
-    private void loadRecipeListData() {
+    public void loadRecipeListData() {
         showRecipeListDataView();
         getRecipeNameList();
     }
@@ -189,6 +189,15 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
     private void showErrorMessage() {
         mRecyclerView.setVisibility(View.INVISIBLE);
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
+    }
+
+    public void onListItemClick(String recipeList) {
+                setContentView(R.layout.fragment_recipe_details);
+        Context context = this;
+        Class recipeDetailsActivityClass = RecipeDetailsActivity.class;
+        Intent intentToStartDetailActivity = new Intent(context, recipeDetailsActivityClass);
+        intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, recipeList);
+        startActivity(intentToStartDetailActivity);
     }
 
     public class FetchRecipeList extends AsyncTask<String, Void, String[]> {
@@ -229,10 +238,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
             }
         }
 
-    }
-
-    public void onListItemClick(int clickedItemIndex) {
-        setContentView(R.layout.fragment_recipe_details);
     }
 
 }
