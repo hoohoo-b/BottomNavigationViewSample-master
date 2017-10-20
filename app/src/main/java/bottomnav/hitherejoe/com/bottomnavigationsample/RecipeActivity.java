@@ -9,14 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link RecipeActivity.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link RecipeActivity#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class RecipeActivity extends Fragment {
 
     public static RecipeActivity newInstance() {

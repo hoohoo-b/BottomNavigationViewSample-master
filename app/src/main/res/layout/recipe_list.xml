@@ -29,7 +29,7 @@
             android:textColor="@color/white"
             android:textStyle="bold"
             android:shadowColor="@color/colorPrimaryDark"
-            android:shadowRadius="2"/>
+            android:shadowRadius="10"/>
 
     </RelativeLayout>
 

@@ -87,8 +87,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
         String imageURL = "";
 
         try {
-            recipeName = JsonReader.retrieveRecipeName(recipeList);
-            imageURL = JsonReader.retrieveRecipeImageUrl(recipeList);
+            recipeName = JsonReader.getRecipeName(recipeList);
+            imageURL = JsonReader.getRecipeImageUrl(recipeList);
         } catch (JSONException e) {
             e.printStackTrace();
         }
