@@ -110,4 +110,8 @@
 
     <!-- Strings related to recipe_page -->
     <string name="error_message">Error!</string>
+
+    <!-- Strings related to recipe_details_page -->
+    <string name="recipe_description">Recipe Description</string>
+    <string name="recipe_ingredients">Recipe Ingredients</string>
 </resources>

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.R.id.list;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 /**
  * Created by Allets on 15/10/2017.
@@ -30,44 +31,62 @@ public class JsonReader {
         return recipeListData;
     }
 
-    public static String retrieveRecipeName(String output) throws JSONException {
+    public static String getRecipeName(String output) throws JSONException {
         JSONObject recipeListJson = new JSONObject(output);
         return recipeListJson.getString("name");
     }
 
-    public static String retrieveRecipeImageUrl(String output) throws JSONException {
+    public static String getRecipeImageUrl(String output) throws JSONException {
         JSONObject recipeListJson = new JSONObject(output);
         return recipeListJson.getString("image_url");
     }
 
-    public static String retrieveRecipeDescription(String output) throws JSONException {
+    public static String getRecipeDescription(String output) throws JSONException {
         JSONObject recipeListJson = new JSONObject(output);
         return recipeListJson.getString("description");
     }
 
-    public static String retrieveRecipeUploadUserId(String output) throws JSONException {
+    public static String getRecipeUploadUserId(String output) throws JSONException {
         JSONObject recipeListJson = new JSONObject(output);
         return recipeListJson.getString("upload_by_user");
     }
 
-    public static String retrieveRecipeDifficultyLevel(String output) throws JSONException {
+    public static String getRecipeDifficultyLevel(String output) throws JSONException {
         JSONObject recipeListJson = new JSONObject(output);
-        return recipeListJson.getString("difficulty_level");
+        String recipeDifficulty = recipeListJson.getString("difficulty_level");
+        switch (recipeDifficulty) {
+            case "0":
+                recipeDifficulty = "easy";
+                break;
+            case "1":
+                recipeDifficulty = "medium";
+                break;
+            case "2":
+                recipeDifficulty = "hard";
+        }
+
+        return recipeDifficulty;
     }
 
-    public static String retrieveRecipeTimeRequired(String output) throws JSONException {
+    public static String getRecipeTimeRequired(String output) throws JSONException {
         JSONObject recipeListJson = new JSONObject(output);
         return recipeListJson.getString("time_required");
     }
 
-    public static String retrieveRecipeUploadDateTime(String output) throws JSONException {
+    public static String getRecipeUploadDateTime(String output) throws JSONException {
         JSONObject recipeListJson = new JSONObject(output);
         return recipeListJson.getString("upload_datetime");
     }
 
-//    public static String retrieveRecipeIngredients(String output) throws JSONException {
-//        JSONObject recipeListJson = new JSONObject(output);
-//        return recipeListJson.getString("ingredients");
-//    }
+    public static String getRecipeIngredients(String output) throws JSONException {
+        JSONObject recipeListJson = new JSONObject(output);
+        JSONObject recipeIngredients = new JSONObject(output);
+        return recipeIngredients.getString("ingredients");
+    }
+
+    public static Boolean getRecipeIsFavourite(String output) throws JSONException {
+        JSONObject recipeListJson = new JSONObject(output);
+        return recipeListJson.getBoolean("is_favourited");
+    }
 
 }
