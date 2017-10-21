@@ -36,14 +36,16 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
     private TextView mErrorMessageDisplay;
 
     private ProgressBar mLoadingIndicator;
+
     private String mEmail = null;
+    private String authToken = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mEmail = MyApplication.getEmail();
+        authToken = MyApplication.getAuthToken();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_recipelist);
         mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
@@ -161,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
     }
 
     private void getRecipeNameList() {
-        new FetchRecipeList().execute("https://hidden-springs-80932.herokuapp.com/" + mEmail + "/api/v1.0/recipe/list/", "GET", "");
+        new FetchRecipeList().execute("https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/list/", "GET", authToken);
     }
 
     private void showRecipeListDataView() {
@@ -195,13 +197,13 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         protected String[] doInBackground(String... params) {
             String urlString = params[0];
             String requestMethod = params[1];
-            String json = params[2];
+            String authToken = params[2];
 
             String output;
             String[] recipeList = null;
 
             try {
-                output = NetworkUtils.getResponseFromHttpUrl(urlString, requestMethod, json);
+                output = NetworkUtils.getResponseFromHttpUrl(urlString, requestMethod, authToken);
                 recipeList = JsonReader.retrieveRecipeList(output);
             } catch (Exception e) {
                 e.printStackTrace();

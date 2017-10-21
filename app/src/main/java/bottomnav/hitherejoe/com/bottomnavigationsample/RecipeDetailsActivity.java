@@ -21,7 +21,7 @@ import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.NetworkUtils;
  * Created by Allets on 19/10/2017.
  */
 
-public class RecipeDetailsActivity extends AppCompatActivity implements View.OnClickListener{
+public class RecipeDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
     String recipeName = "";
     String recipeDescription = "";
@@ -88,8 +88,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements View.OnC
 
                 if (recipeIsFavourite) {
                     mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_true);
-                }
-                else {
+                } else {
                     mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_false);
                 }
             }
@@ -110,17 +109,16 @@ public class RecipeDetailsActivity extends AppCompatActivity implements View.OnC
                 if (recipeIsFavourite) {
                     mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_false);
                     recipeIsFavourite = false;
-                    new EditRecipeFavourite().execute("https://hidden-springs-80932.herokuapp.com/" + mEmail + "/api/v1.0/recipe/favourite/" + recipeId, "POST", authToken);
-                }
-                else {
+                    new EditRecipeFavourite().execute("https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/favourite/" + recipeId + "/", "DELETE", authToken);
+                } else {
                     mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_true);
                     recipeIsFavourite = true;
-                    new EditRecipeFavourite().execute("https://hidden-springs-80932.herokuapp.com/" + mEmail + "/api/v1.0/recipe/favourite/" + recipeId, "POST", authToken);
+                    new EditRecipeFavourite().execute("https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/favourite/" + recipeId + "/", "POST", authToken);
                 }
         }
     }
 
-    public class EditRecipeFavourite extends AsyncTask<String, Void, Void> {
+    public class EditRecipeFavourite extends AsyncTask<String, Void, String> {
 
         @Override
         protected void onPreExecute() {
@@ -128,13 +126,13 @@ public class RecipeDetailsActivity extends AppCompatActivity implements View.OnC
         }
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected String doInBackground(String... params) {
             String urlString = params[0];
             String requestMethod = params[1];
-            String json = params[2];
+            String authToken = params[2];
 
             try {
-                NetworkUtils.getResponseFromHttpUrl(urlString, requestMethod, json);
+                NetworkUtils.getResponseFromHttpUrl(urlString, requestMethod, authToken);
             } catch (Exception e) {
                 e.printStackTrace();
             }
