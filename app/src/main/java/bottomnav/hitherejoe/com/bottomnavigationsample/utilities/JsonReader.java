@@ -5,10 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import static android.R.id.list;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 /**
  * Created by Allets on 15/10/2017.
@@ -87,6 +83,11 @@ public class JsonReader {
     public static Boolean getRecipeIsFavourite(String output) throws JSONException {
         JSONObject recipeListJson = new JSONObject(output);
         return recipeListJson.getBoolean("is_favourited");
+    }
+
+    public static String getRecipeId(String output) throws JSONException {
+        JSONObject recipeListJson = new JSONObject(output);
+        return recipeListJson.getString("id");
     }
 
 }

@@ -4,15 +4,11 @@ package bottomnav.hitherejoe.com.bottomnavigationsample.utilities;
  * Created by Allets on 9/10/2017.
  */
 
-import android.net.Uri;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.Scanner;
 

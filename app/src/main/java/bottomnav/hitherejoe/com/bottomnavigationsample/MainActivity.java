@@ -4,43 +4,23 @@ package bottomnav.hitherejoe.com.bottomnavigationsample;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.InputStream;
-import java.util.ArrayList;
-
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.JsonReader;
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.NetworkUtils;
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.RecipeAdapter;
-
-import static android.R.id.list;
 
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.ListItemClickListener {
 
@@ -57,10 +37,15 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
 
     private ProgressBar mLoadingIndicator;
 
+    private String mEmail = null;
+    private String authToken = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        authToken = MyApplication.getAuthToken();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_recipelist);
         mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
@@ -178,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
     }
 
     private void getRecipeNameList() {
-        new FetchRecipeList().execute("https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/list/", "GET", "");
+        new FetchRecipeList().execute("https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/list/", "GET", authToken);
     }
 
     private void showRecipeListDataView() {
@@ -196,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         Context context = this;
         Class recipeDetailsActivityClass = RecipeDetailsActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, recipeDetailsActivityClass);
-        intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, recipeList);
+        intentToStartDetailActivity.putExtra("RecipeDetails", recipeList);
         startActivity(intentToStartDetailActivity);
     }
 
@@ -212,13 +197,13 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         protected String[] doInBackground(String... params) {
             String urlString = params[0];
             String requestMethod = params[1];
-            String json = params[2];
+            String authToken = params[2];
 
             String output;
             String[] recipeList = null;
 
             try {
-                output = NetworkUtils.getResponseFromHttpUrl(urlString, requestMethod, json);
+                output = NetworkUtils.getResponseFromHttpUrl(urlString, requestMethod, authToken);
                 recipeList = JsonReader.retrieveRecipeList(output);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -5,19 +5,17 @@ package bottomnav.hitherejoe.com.bottomnavigationsample;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
-
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -48,6 +46,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private UserLoginTask mAuthTask = null;
     private Boolean loginDebugMode = false;
+    private String authToken = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -105,15 +104,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
 
-    private Boolean attemptLogin(){
+    private Boolean attemptLogin() {
+
+        // Store values at the time of the login attempt.
+        String email = mEmailView.getText().toString();
+        String password = mPasswordView.getText().toString();
 
         if (mAuthTask != null) {
             return false;
         }
 
-        if (loginDebugMode){
+        if (loginDebugMode) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.putExtra("AuthToken", "32ff65c24c42a5efa074ad4e5804f098bc0f8447");
             startActivity(intent);
         }
 
@@ -121,10 +123,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
-
-        // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -161,19 +159,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             try {
                 tokenJson = mAuthTask.execute((Void) null).get();
                 JSONObject tokenJsonObj = new JSONObject(tokenJson);
-                String tokenString = tokenJsonObj.getString("token");
+                authToken = tokenJsonObj.getString("token");
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("AuthToken", tokenString);
                 startActivity(intent);
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
-            } catch (JSONException  e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+            MyApplication.setAuthToken(authToken);
+            MyApplication.setEmail(email);
 
         }
 
@@ -319,6 +319,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (tokenString != "") {
+                authToken = tokenString;
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
