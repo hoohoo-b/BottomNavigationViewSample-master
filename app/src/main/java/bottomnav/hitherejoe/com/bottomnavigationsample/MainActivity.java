@@ -4,23 +4,41 @@ package bottomnav.hitherejoe.com.bottomnavigationsample;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.JsonReader;
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.NetworkUtils;
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.RecipeAdapter;
+
+import static android.R.attr.bitmap;
+import static bottomnav.hitherejoe.com.bottomnavigationsample.R.id.imageView;
 
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.ListItemClickListener {
 
@@ -37,15 +55,24 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
 
     private ProgressBar mLoadingIndicator;
 
-    private String mEmail = null;
-    private String authToken = null;
+    private String authToken = "";
+
+    private Bitmap recipeImage;
+    String mCurrentPhotoPath;
+    static final int REQUEST_TAKE_PHOTO = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        authToken = MyApplication.getAuthToken();
+
+        String token = MyApplication.getAuthToken();
+        if (token != null) {
+            authToken = token;
+        }
+
+        final Context context = this;
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_recipelist);
         mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
@@ -84,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
                 } else if (position == 1) {
                     FavouriteActivity dramaFragment = new FavouriteActivity();
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, dramaFragment).commit();
+                } else if (position == 2) {
+                    dispatchTakePictureIntent();
                 } else if (position == 4) {
                     BlankFragment documentaryFragment = new BlankFragment();
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, documentaryFragment).commit();
@@ -177,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
     }
 
     public void onListItemClick(String recipeList) {
-                setContentView(R.layout.fragment_recipe_details);
+        setContentView(R.layout.fragment_recipe_details);
         Context context = this;
         Class recipeDetailsActivityClass = RecipeDetailsActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, recipeDetailsActivityClass);
@@ -223,6 +252,23 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
             }
         }
 
+    }
+
+    public void dispatchTakePictureIntent() {
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            Intent intent = new Intent(MainActivity.this, UploadActivity.class);
+            intent.setData(selectedImage);
+            startActivity(intent);
+        }
     }
 
 }
