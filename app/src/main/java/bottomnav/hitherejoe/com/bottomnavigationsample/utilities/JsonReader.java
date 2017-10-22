@@ -6,11 +6,38 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static android.R.attr.name;
+
 /**
  * Created by Allets on 15/10/2017.
  */
 
 public class JsonReader {
+    private static String recipeName;
+    private static String recipeDescription;
+    private static int recipeDifficulty;
+
+
+    public static void setRecipeName(String name) {
+        recipeName = name;
+    }
+
+    public static void setRecipeDescription(String description) {
+        recipeDescription = description;
+    }
+
+    public static void setRecipeDifficulty(String difficulty) {
+        switch(difficulty){
+            case "easy":
+                recipeDifficulty = 0;
+                break;
+            case "medium":
+                recipeDifficulty = 1;
+                break;
+            case "hard":
+                recipeDifficulty = 2;
+        }
+    }
 
     public static String[] retrieveRecipeList(String output) throws JSONException {
         ArrayList<String> list = new ArrayList<String>();
@@ -89,5 +116,27 @@ public class JsonReader {
         JSONObject recipeListJson = new JSONObject(output);
         return recipeListJson.getString("id");
     }
+
+    public static String getFormattedRecipe(){
+        String data;
+        JSONObject json = new JSONObject();
+
+        try {
+            json.put("name", recipeName);
+            json.put("description", recipeDescription);
+            json.put("difficulty", recipeDifficulty);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        data = json.toString();
+        return data;
+
+    }
+
+    public static String getRecipeIdFromResult(String result) throws JSONException{
+        JSONObject resultOutput = new JSONObject(result);
+        return resultOutput.getString("id");
+    }
+
 
 }
