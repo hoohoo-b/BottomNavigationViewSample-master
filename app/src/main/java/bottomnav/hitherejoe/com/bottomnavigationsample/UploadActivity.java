@@ -12,29 +12,21 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
-import android.view.View.OnClickListener;
-
-import org.json.JSONException;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.JsonReader;
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.NetworkUtils;
 
-import static android.R.id.list;
-import static bottomnav.hitherejoe.com.bottomnavigationsample.R.id.action_context_bar;
-import static bottomnav.hitherejoe.com.bottomnavigationsample.R.id.btnAdd;
-import static bottomnav.hitherejoe.com.bottomnavigationsample.R.string.hour;
-import static bottomnav.hitherejoe.com.bottomnavigationsample.R.string.recipe_difficulty;
+import static android.R.attr.x;
 
 /**
  * Created by Allets on 21/10/2017.
@@ -54,10 +46,13 @@ public class UploadActivity extends AppCompatActivity {
     Spinner mHours;
     Spinner mMinutes;
     Spinner mIngredients;
+    TextView mIngredientSelected;
     Spinner mQuantity;
     Spinner mMeasurement;
     Spinner mDifficulty;
     Button btnAdd;
+    Button btnSelect;
+    Button btnRemove;
     Bitmap recipeImage;
     ImageView mImage;
     String authToken = "";
@@ -99,10 +94,13 @@ public class UploadActivity extends AppCompatActivity {
         mHours = (Spinner) findViewById(R.id.spinner_recipe_duration_hour);
         mMinutes = (Spinner) findViewById(R.id.spinner_recipe_duration_minute);
         mIngredients = (Spinner) findViewById(R.id.spinner_recipe_ingredients);
+        mIngredientSelected = (TextView) findViewById(R.id.tv_recipe_ingredient_selected);
         mQuantity = (Spinner) findViewById(R.id.spinner_recipe_quantity);
         mMeasurement = (Spinner) findViewById(R.id.spinner_recipe_quantity_measurement);
         mDifficulty = (Spinner) findViewById(R.id.spinner_recipe_difficulty);
         btnAdd = (Button) findViewById(R.id.btnAdd);
+        btnSelect = (Button) findViewById(R.id.btnSelectIngredient);
+        btnRemove = (Button) findViewById(R.id.btnRemoveIngredient);
         mImage = (ImageView) findViewById(R.id.iv_recipe_upload_image);
 
         mImage.setImageBitmap(recipeImage);
@@ -163,7 +161,7 @@ public class UploadActivity extends AppCompatActivity {
         String descriptionInput;
         String difficultyInput;
 
-        nameInput =  mName.getText().toString();
+        nameInput = mName.getText().toString();
         descriptionInput = mDescription.getText().toString();
         difficultyInput = mDifficulty.getSelectedItem().toString();
 
@@ -204,6 +202,26 @@ public class UploadActivity extends AppCompatActivity {
             ingredientsList.add(txtItem.getText().toString());
             txtItem.setText("");
             ingredientAdapter.notifyDataSetChanged();
+        }
+
+        if (view == btnSelect) {
+            String ingredientSelected = mQuantity.getSelectedItem().toString() + " " + mMeasurement.getSelectedItem().toString() + " of " + mIngredients.getSelectedItem().toString();
+            if (mIngredientSelected.getText() == null) {
+                mIngredientSelected.setText(ingredientSelected);
+            } else {
+                mIngredientSelected.append("\n" + ingredientSelected);
+            }
+        }
+
+        if (view == btnRemove) {
+            if (mIngredientSelected.getText() != null) {
+                String existingIngredient = mIngredientSelected.getText().toString();
+                if(existingIngredient.lastIndexOf("\n")>0) {
+                    mIngredientSelected.setText(existingIngredient.substring(0, existingIngredient.lastIndexOf("\n")));
+                } else {
+                    mIngredientSelected.setText("");
+                }
+            }
         }
     }
 
