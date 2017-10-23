@@ -1,5 +1,6 @@
 package bottomnav.hitherejoe.com.bottomnavigationsample;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -25,8 +26,6 @@ import java.util.ArrayList;
 
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.JsonReader;
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.NetworkUtils;
-
-import static android.R.attr.x;
 
 /**
  * Created by Allets on 21/10/2017.
@@ -79,6 +78,26 @@ public class UploadActivity extends AppCompatActivity {
 
         if (intentThatStartedThisActivity != null) {
             imageUri = intentThatStartedThisActivity.getData();
+
+//            todo #1: FOR STELLA TO REFFERENCE
+//            System.out.println("---------START UPLOAD FOOD IMAGE TEST------------");
+//
+//            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+//            Cursor cursor = this.getContentResolver().query(imageUri, filePathColumn, null, null, null);
+//            String imfilename = null;
+//            if (cursor.moveToFirst()) {
+//                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//                String filePath = cursor.getString(columnIndex);
+//                System.out.println("---------" + filePath + "------------");
+//                imfilename = filePath.substring(filePath.lastIndexOf("/") + 1);
+//            }
+//
+//            UploadRecipeImageAsyncTask uploadRecipeImageTask = new UploadRecipeImageAsyncTask(imageUri, this.getContentResolver(), imfilename);
+//            uploadRecipeImageTask.execute("https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/image/upload/2/", "32ff65c24c42a5efa074ad4e5804f098bc0f8447");
+//
+//            System.out.println("---------END UPLOAD FOOD IMAGE TEST------------");
+
+
             try {
                 recipeImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
             } catch (IOException e) {
@@ -255,6 +274,36 @@ public class UploadActivity extends AppCompatActivity {
             mToast.setText(s);
             resultOutput = s;
         }
+    }
+
+    public class UploadRecipeImageAsyncTask extends AsyncTask<String, Void, String> {
+
+        private final Uri imageUri;
+        private final ContentResolver cr;
+        private final String imageFileName;
+
+        UploadRecipeImageAsyncTask(Uri imageUri, ContentResolver cr, String filename) {
+            this.imageUri = imageUri;
+            this.cr = cr;
+            this.imageFileName = filename;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String urlString = params[0];
+            String authToken = params[1];
+
+            String output = null;
+            try {
+                output = NetworkUtils.imageUploadPost(urlString, authToken, imageUri, this.cr, this.imageFileName);
+                System.out.println(output);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return output;
+        }
+
     }
 
 }
