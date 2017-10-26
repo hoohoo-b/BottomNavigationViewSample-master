@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
 //    private BottomBar mBottomBar;
 
     private static final int NUM_LIST_ITEMS = 100;
-    private static Button btn_settings;
     private Fragment fragment;
 
     private RecyclerView mRecyclerView;
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         AHBottomNavigation bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
 
 // Create items
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem("Recipe", R.drawable.ic_free_breakfast_black_24dp, R.color.colorAccent);
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem("Recipe", R.drawable.ic_restaurant_menu_black_24dp, R.color.colorAccent);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem("Favourites", R.drawable.ic_star_black_24dp, R.color.colorAccent);
         AHBottomNavigationItem item3 = new AHBottomNavigationItem("Upload", R.drawable.ic_add_black_24dp, R.color.colorAccent);
         AHBottomNavigationItem item4 = new AHBottomNavigationItem("Activity", R.drawable.ic_notifications_black_24dp, R.color.colorAccent);
