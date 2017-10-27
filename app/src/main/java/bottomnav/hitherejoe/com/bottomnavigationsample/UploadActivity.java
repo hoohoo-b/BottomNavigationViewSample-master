@@ -3,6 +3,7 @@ package bottomnav.hitherejoe.com.bottomnavigationsample;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -82,17 +83,7 @@ public class UploadActivity extends AppCompatActivity {
 //            todo #1: FOR STELLA TO REFFERENCE
 //            System.out.println("---------START UPLOAD FOOD IMAGE TEST------------");
 //
-//            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-//            Cursor cursor = this.getContentResolver().query(imageUri, filePathColumn, null, null, null);
-//            String imfilename = null;
-//            if (cursor.moveToFirst()) {
-//                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//                String filePath = cursor.getString(columnIndex);
-//                System.out.println("---------" + filePath + "------------");
-//                imfilename = filePath.substring(filePath.lastIndexOf("/") + 1);
-//            }
-//
-//            UploadRecipeImageAsyncTask uploadRecipeImageTask = new UploadRecipeImageAsyncTask(imageUri, this.getContentResolver(), imfilename);
+//            UploadRecipeImageAsyncTask uploadRecipeImageTask = new UploadRecipeImageAsyncTask(imageUri, this.getContentResolver());
 //            uploadRecipeImageTask.execute("https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/image/upload/2/", "32ff65c24c42a5efa074ad4e5804f098bc0f8447");
 //
 //            System.out.println("---------END UPLOAD FOOD IMAGE TEST------------");
@@ -280,12 +271,22 @@ public class UploadActivity extends AppCompatActivity {
 
         private final Uri imageUri;
         private final ContentResolver cr;
-        private final String imageFileName;
+        private String imageFileName;
 
-        UploadRecipeImageAsyncTask(Uri imageUri, ContentResolver cr, String filename) {
+        UploadRecipeImageAsyncTask(Uri imageUri, ContentResolver cr) {
             this.imageUri = imageUri;
             this.cr = cr;
-            this.imageFileName = filename;
+            this.imageFileName = "filename.jpg";
+
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = cr.query(imageUri, filePathColumn, null, null, null);
+
+            if (cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String filePath = cursor.getString(columnIndex);
+                this.imageFileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+            }
+
         }
 
         @Override
