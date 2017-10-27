@@ -1,7 +1,9 @@
 package bottomnav.hitherejoe.com.bottomnavigationsample;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -34,8 +36,6 @@ import java.util.Collections;
 
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.JsonReader;
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.NetworkUtils;
-
-import static android.R.attr.x;
 
 /**
  * Created by Allets on 21/10/2017.
@@ -91,6 +91,16 @@ public class UploadActivity extends AppCompatActivity {
 
         if (intentThatStartedThisActivity != null) {
             imageUri = intentThatStartedThisActivity.getData();
+
+//            todo #1: FOR STELLA TO REFFERENCE
+//            System.out.println("---------START UPLOAD FOOD IMAGE TEST------------");
+//
+//            UploadRecipeImageAsyncTask uploadRecipeImageTask = new UploadRecipeImageAsyncTask(imageUri, this.getContentResolver());
+//            uploadRecipeImageTask.execute("https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/image/upload/2/", "32ff65c24c42a5efa074ad4e5804f098bc0f8447");
+//
+//            System.out.println("---------END UPLOAD FOOD IMAGE TEST------------");
+
+
             try {
                 recipeImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
             } catch (IOException e) {
@@ -205,9 +215,6 @@ public class UploadActivity extends AppCompatActivity {
         minuteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mMinutes.setAdapter(minuteAdapter);
 
-//        ingredientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        mIngredients.setAdapter(ingredientAdapter);
-
         quantityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mQuantity.setAdapter(quantityAdapter);
 
@@ -279,6 +286,7 @@ public class UploadActivity extends AppCompatActivity {
         }
     }
 
+
     public class FetchIngredientList extends AsyncTask<String, Void, String[]> {
 
         @Override
@@ -322,11 +330,51 @@ public class UploadActivity extends AppCompatActivity {
                         android.R.layout.simple_spinner_item, ingredientsList);
                 ingredientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 mIngredients.setAdapter(ingredientAdapter);
-
-//            Collections.addAll(ingredientsList, ingredientListOutput);
             }
         }
 
     }
+
+    public class UploadRecipeImageAsyncTask extends AsyncTask<String, Void, String> {
+
+        private final Uri imageUri;
+        private final ContentResolver cr;
+        private String imageFileName;
+
+        UploadRecipeImageAsyncTask(Uri imageUri, ContentResolver cr) {
+            this.imageUri = imageUri;
+            this.cr = cr;
+            this.imageFileName = "filename.jpg";
+
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = cr.query(imageUri, filePathColumn, null, null, null);
+
+            if (cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String filePath = cursor.getString(columnIndex);
+                this.imageFileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+            }
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String urlString = params[0];
+            String authToken = params[1];
+
+            String output = null;
+            try {
+                output = NetworkUtils.imageUploadPost(urlString, authToken, imageUri, this.cr, this.imageFileName);
+                System.out.println(output);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return output;
+        }
+
+    }
+
+
 }
 
