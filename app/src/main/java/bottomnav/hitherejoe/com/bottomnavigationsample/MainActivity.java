@@ -41,17 +41,15 @@ import static android.R.attr.bitmap;
 import static bottomnav.hitherejoe.com.bottomnavigationsample.R.id.imageView;
 
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.ListItemClickListener {
-
-//    private BottomBar mBottomBar;
+    
 
     private static final int NUM_LIST_ITEMS = 100;
-    private Fragment fragment;
+
 
     private RecyclerView mRecyclerView;
     private RecipeAdapter mRecipeAdapter;
 
     private TextView mErrorMessageDisplay;
-
     private ProgressBar mLoadingIndicator;
 
     private String authToken = "";
@@ -105,11 +103,12 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
                 if (position == 0) {
-                    RecipeActivity crimeFragment = new RecipeActivity();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, crimeFragment).commit();
+                    RecipeActivity recipeFragment = new RecipeActivity();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, recipeFragment).commit();
                 } else if (position == 1) {
-                    FavouriteActivity dramaFragment = new FavouriteActivity();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, dramaFragment).commit();
+                    Class favouriteActivityClass = FavouriteActivity.class;
+                    Intent intentToStartDetailActivity = new Intent(context, favouriteActivityClass);
+                    startActivity(intentToStartDetailActivity);
                 } else if (position == 2) {
                     dispatchTakePictureIntent();
                 } else if (position == 4) {
@@ -126,61 +125,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
                 // Manage the new y position
             }
         });
-
-
-/*        mBottomBar = BottomBar.attach(this, savedInstanceState);
-        mBottomBar.setItems(R.menu.bottombar_menu);
-        mBottomBar.setOnMenuTabClickListener(new OnMenuTabClickListener() {
-            @Override
-            public void onMenuTabSelected(@IdRes int menuItemId) {
-                if (resId == R.id.bb_menu_recents) {
-                    // The user selected the "Recents" tab.
-                }
-            }
-
-            @Override
-            public void onMenuTabReSelected(@IdRes int menuItemId) {
-                if (resId == R.id.bb_menu_recents) {
-                    // The user reselected the "Recents" tab. React accordingly.
-                }
-            }
-        });*/
-
-/*        BottomNavigationView bottomNavigationView = (BottomNavigationView)
-                findViewById(R.id.bottom_navigation);*/
-
-/*        bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.action_recipe:
-                                fragment = new RecipeActivity();
-                                FragmentManager fm = getSupportFragmentManager();
-                                FragmentTransaction ft = fm.beginTransaction();
-                                ft.replace(R.id.fragmentp, fragment);
-                                ft.commit();
-                                break;
-                            case R.id.action_favourite:
-                                fragment = new FavouriteActivity();
-                                fm = getSupportFragmentManager();
-                                ft = fm.beginTransaction();
-                                ft.replace(R.id.fragmentp, fragment);
-                                ft.commit();
-                                break;
-                            case R.id.action_me:
-                                fragment = new BlankFragment();
-                                fm = getSupportFragmentManager();
-                                ft = fm.beginTransaction();
-                                ft.replace(R.id.fragmentp, fragment);
-                                ft.commit();
-                                break;
-                            default:
-                                break;
-                        }
-                        return false;
-                    }
-                });*/
 
         loadRecipeListData();
     }

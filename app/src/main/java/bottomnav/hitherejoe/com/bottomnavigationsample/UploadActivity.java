@@ -9,7 +9,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,12 +20,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.JsonReader;
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.NetworkUtils;
@@ -57,7 +66,9 @@ public class UploadActivity extends AppCompatActivity {
     ImageView mImage;
     String authToken = "";
     String resultOutput = null;
+    String[] ingredientListOutput = null;
     Uri imageUri;
+    LinearLayout mRecipeUploadPage;
 
     ArrayAdapter<String> hourAdapter;
     ArrayAdapter<String> minuteAdapter;
@@ -67,13 +78,14 @@ public class UploadActivity extends AppCompatActivity {
     ArrayAdapter<String> difficultyAdapter;
 
     Toast mToast;
+    Context context;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipe_upload);
 
-        Context context = this;
+        context = this;
 
         Intent intentThatStartedThisActivity = getIntent();
 
@@ -97,7 +109,11 @@ public class UploadActivity extends AppCompatActivity {
 
         }
 
-        authToken = MyApplication.getAuthToken();
+        if (MyApplication.getAuthToken() != null) {
+            authToken = MyApplication.getAuthToken();
+        }
+
+        mRecipeUploadPage = (LinearLayout) findViewById(R.id.ll_recipe_upload_page);
 
         mName = (EditText) findViewById(R.id.et_recipe_upload_name);
         mDescription = (EditText) findViewById(R.id.et_recipe_upload_description);
@@ -115,12 +131,13 @@ public class UploadActivity extends AppCompatActivity {
 
         mImage.setImageBitmap(recipeImage);
 
+        getIngredientsNameList();
+
         hourAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, hours);
         minuteAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, minutes);
-        ingredientAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, ingredientsList);
+        System.out.print(ingredientsList);
         quantityAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, quantity);
         measurementAdapter = new ArrayAdapter<String>(this,
@@ -145,15 +162,9 @@ public class UploadActivity extends AppCompatActivity {
         String recipeId = null;
 
         switch (itemId) {
-            /*
-             * When you click the reset menu item, we want to start all over
-             * and display the pretty gradient again. There are a few similar
-             * ways of doing this, with this one being the simplest of those
-             * ways. (in our humble opinion)
-             */
             case R.id.action_next:
                 String data = getDataInputsPart1();
-                new UploadRecipe().execute("https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/upload/", "POST", data, authToken);
+                new UploadRecipe().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/upload/", "POST", data, authToken);
 //                try {
 //                    recipeId = JsonReader.getRecipeIdFromResult(resultOutput);
 //                } catch (JSONException e) {
@@ -164,6 +175,21 @@ public class UploadActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void getIngredientsNameList() {
+        new FetchIngredientList().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "https://hidden-springs-80932.herokuapp.com/api/v1.0/ingredient/list/", "GET", authToken);
+        if (ingredientListOutput != null) {
+//            ArrayList<String> listOfIngredientNames = null;
+//            for (int i = 0; i < ingredientListOutput.length; i++) {
+//                try {
+//                    listOfIngredientNames.add(JsonReader.getRecipeName(ingredientListOutput[i]));
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            ingredientsList = listOfIngredientNames;
+        }
     }
 
     private String getDataInputsPart1() {
@@ -182,19 +208,12 @@ public class UploadActivity extends AppCompatActivity {
     }
 
     public void viewItemsOnSpinner() {
-        ingredientsList.add("fish");
-        ingredientsList.add("chicken");
-        ingredientsList.add("pork");
-        ingredientsList.add("beef");
 
         hourAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mHours.setAdapter(hourAdapter);
 
         minuteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mMinutes.setAdapter(minuteAdapter);
-
-        ingredientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mIngredients.setAdapter(ingredientAdapter);
 
         quantityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mQuantity.setAdapter(quantityAdapter);
@@ -226,7 +245,7 @@ public class UploadActivity extends AppCompatActivity {
         if (view == btnRemove) {
             if (mIngredientSelected.getText() != null) {
                 String existingIngredient = mIngredientSelected.getText().toString();
-                if(existingIngredient.lastIndexOf("\n")>0) {
+                if (existingIngredient.lastIndexOf("\n") > 0) {
                     mIngredientSelected.setText(existingIngredient.substring(0, existingIngredient.lastIndexOf("\n")));
                 } else {
                     mIngredientSelected.setText("");
@@ -265,6 +284,55 @@ public class UploadActivity extends AppCompatActivity {
             mToast.setText(s);
             resultOutput = s;
         }
+    }
+
+
+    public class FetchIngredientList extends AsyncTask<String, Void, String[]> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String[] doInBackground(String... params) {
+
+            String urlString = params[0];
+            String requestMethod = params[1];
+            String authToken = params[2];
+
+            String output;
+            String[] ingredientList = null;
+
+            try {
+                output = NetworkUtils.getResponseFromHttpUrl(urlString, requestMethod, authToken);
+                ingredientList = JsonReader.retrieveRecipeList(output);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return ingredientList;
+        }
+
+
+        @Override
+        protected void onPostExecute(String[] ingredientListData) {
+
+            ingredientListOutput = ingredientListData;
+            if (ingredientListOutput != null && ingredientListOutput.length > 0) {
+                for (int i = 0; i < ingredientListOutput.length; i++) {
+                    try {
+                        ingredientsList.add(JsonReader.getRecipeName(ingredientListOutput[i]));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                ingredientAdapter = new ArrayAdapter<String>(context,
+                        android.R.layout.simple_spinner_item, ingredientsList);
+                ingredientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                mIngredients.setAdapter(ingredientAdapter);
+            }
+        }
+
     }
 
     public class UploadRecipeImageAsyncTask extends AsyncTask<String, Void, String> {
@@ -306,6 +374,7 @@ public class UploadActivity extends AppCompatActivity {
         }
 
     }
+
 
 }
 
