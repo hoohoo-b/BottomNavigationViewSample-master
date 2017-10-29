@@ -45,7 +45,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_recipe_details);
+        setContentView(R.layout.recipe_details);
 
         mRecipeName = (TextView) findViewById(R.id.tv_recipe_details_name);
         mRecipeDescription = (TextView) findViewById(R.id.tv_recipe_details_description);
