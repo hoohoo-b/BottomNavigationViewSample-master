@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,10 +23,7 @@ import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.RecipeAdapter;
 
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.ListItemClickListener {
 
-//    private BottomBar mBottomBar;
-
     private static final int NUM_LIST_ITEMS = 100;
-    private Fragment fragment;
 
     private RecyclerView mRecyclerView;
     private RecipeAdapter mRecipeAdapter;
@@ -88,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
                     RecipeActivity recipeFragment = new RecipeActivity();
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, recipeFragment).commit();
                 } else if (position == 1) {
-                    FavouriteActivity favRecipeFragment = new FavouriteActivity();
+                    FavRecipeFragment favRecipeFragment = new FavRecipeFragment();
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, favRecipeFragment).commit();
                 } else if (position == 2) {
                     dispatchTakePictureIntent();
