@@ -1,22 +1,17 @@
-package bottomnav.hitherejoe.com.bottomnavigationsample;
+package bottomnav.thesevchefs.com.bottomnavigationsample;
 
 // FOR MAIN PAGE AFTER LOGIN
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
-import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.RecipeAdapter;
+import bottomnav.thesevchefs.com.bottomnavigationsample.utilities.RecipeAdapter;
 
 public class MainActivity extends AppCompatActivity {
 

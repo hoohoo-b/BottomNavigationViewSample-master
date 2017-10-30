@@ -1,12 +1,10 @@
-package bottomnav.hitherejoe.com.bottomnavigationsample.utilities;
+package bottomnav.thesevchefs.com.bottomnavigationsample.utilities;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-
-import static android.R.attr.name;
 
 /**
  * Created by Allets on 15/10/2017.

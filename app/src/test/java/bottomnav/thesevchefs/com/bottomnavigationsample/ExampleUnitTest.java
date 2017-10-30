@@ -1,4 +1,4 @@
-package bottomnav.hitherejoe.com.bottomnavigationsample;
+package bottomnav.thesevchefs.com.bottomnavigationsample;
 
 import org.junit.Test;
 

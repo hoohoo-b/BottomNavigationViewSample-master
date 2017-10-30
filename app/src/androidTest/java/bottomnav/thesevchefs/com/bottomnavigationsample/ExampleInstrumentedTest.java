@@ -1,4 +1,4 @@
-package bottomnav.hitherejoe.com.bottomnavigationsample;
+package bottomnav.thesevchefs.com.bottomnavigationsample;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("bottomnav.hitherejoe.com.bottomnavigationsample", appContext.getPackageName());
+        assertEquals("bottomnav.thesevchefs.com.bottomnavigationsample", appContext.getPackageName());
     }
 }

@@ -1,4 +1,4 @@
-package bottomnav.hitherejoe.com.bottomnavigationsample;
+package bottomnav.thesevchefs.com.bottomnavigationsample;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -14,8 +14,8 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
-import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.JsonReader;
-import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.NetworkUtils;
+import bottomnav.thesevchefs.com.bottomnavigationsample.utilities.JsonReader;
+import bottomnav.thesevchefs.com.bottomnavigationsample.utilities.NetworkUtils;
 
 /**
  * Created by Allets on 19/10/2017.
