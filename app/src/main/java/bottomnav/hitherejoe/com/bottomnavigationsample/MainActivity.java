@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         String token = MyApplication.getAuthToken();
         if (token != null) {
             authToken = token;
