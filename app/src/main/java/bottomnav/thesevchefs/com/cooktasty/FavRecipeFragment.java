@@ -18,17 +18,22 @@ import android.widget.TextView;
 import bottomnav.thesevchefs.com.cooktasty.utilities.JsonReader;
 import bottomnav.thesevchefs.com.cooktasty.utilities.NetworkUtils;
 import bottomnav.thesevchefs.com.cooktasty.utilities.RecipeAdapter;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class FavRecipeFragment extends Fragment implements RecipeAdapter.ListItemClickListener {
 
     private static final int NUM_LIST_ITEMS = 100;
-    private RecyclerView mRecyclerView;
-    private RecipeAdapter mRecipeAdapter;
-    private ProgressBar mLoadingIndicator;
-    private TextView mErrorMessageDisplay;
+
     private Context appContext;
     private String authToken;
+
+    private RecipeAdapter mRecipeAdapter;
+
+    @BindView(R.id.rv_favrecipelist) RecyclerView mRecyclerView;
+    @BindView(R.id.pb_loading_indicator) ProgressBar mLoadingIndicator;
+    @BindView(R.id.tv_error_message_display) TextView mErrorMessageDisplay;
 
     public static FavRecipeFragment newInstance() {
         FavRecipeFragment fragment = new FavRecipeFragment();
@@ -41,20 +46,17 @@ public class FavRecipeFragment extends Fragment implements RecipeAdapter.ListIte
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_favourite, container, false);
+        ButterKnife.bind(this, rootView);
+
         appContext = getActivity().getApplicationContext();
         authToken = MyApplication.getAuthToken();
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv_favrecipelist);
-        mLoadingIndicator = (ProgressBar) rootView.findViewById(R.id.pb_loading_indicator);
-        mErrorMessageDisplay = (TextView) rootView.findViewById(R.id.tv_error_message_display);
-
+        mRecipeAdapter = new RecipeAdapter(appContext, NUM_LIST_ITEMS, this);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mRecipeAdapter = new RecipeAdapter(appContext, NUM_LIST_ITEMS, this);
         mRecyclerView.setAdapter(mRecipeAdapter);
-
         mRecyclerView.setVisibility(View.VISIBLE);
 
         return rootView;
@@ -62,6 +64,7 @@ public class FavRecipeFragment extends Fragment implements RecipeAdapter.ListIte
 
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+
         showRecipeListDataView();
         getRecipeNameList();
     }
@@ -77,8 +80,6 @@ public class FavRecipeFragment extends Fragment implements RecipeAdapter.ListIte
     }
 
     private void getRecipeNameList() {
-        System.out.println("---------------START TEST-----------");
-        System.out.println(authToken);
         new FetchFavouriteRecipeAsyncTask().execute("https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/favourites/", authToken);
     }
 
@@ -124,6 +125,7 @@ public class FavRecipeFragment extends Fragment implements RecipeAdapter.ListIte
 
     }
 
+    @Override
     public void onListItemClick(String recipeDetails) {
 
         Intent intentToStartRecipeDetailActivity = new Intent(getActivity(), RecipeDetailsActivity.class);
