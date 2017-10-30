@@ -1,10 +1,6 @@
-package bottomnav.hitherejoe.com.bottomnavigationsample.utilities;
+package bottomnav.thesevchefs.com.cooktasty.utilities;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +12,7 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import bottomnav.hitherejoe.com.bottomnavigationsample.MainActivity;
-import bottomnav.hitherejoe.com.bottomnavigationsample.R;
-
-import static bottomnav.hitherejoe.com.bottomnavigationsample.R.id.imageView;
+import bottomnav.thesevchefs.com.cooktasty.R;
 
 /**
  * Created by Allets on 9/10/2017.

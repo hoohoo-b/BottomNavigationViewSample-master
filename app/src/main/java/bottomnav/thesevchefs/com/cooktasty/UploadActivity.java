@@ -1,4 +1,4 @@
-package bottomnav.hitherejoe.com.bottomnavigationsample;
+package bottomnav.thesevchefs.com.cooktasty;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -9,9 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,7 +19,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,12 +27,9 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 
-import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.JsonReader;
-import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.NetworkUtils;
+import bottomnav.thesevchefs.com.cooktasty.utilities.JsonReader;
+import bottomnav.thesevchefs.com.cooktasty.utilities.NetworkUtils;
 
 /**
  * Created by Allets on 21/10/2017.
