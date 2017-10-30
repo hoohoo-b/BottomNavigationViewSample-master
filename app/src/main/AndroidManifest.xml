@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="bottomnav.hitherejoe.com.bottomnavigationsample">
+    package="bottomnav.thesevchefs.com.cooktasty">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -20,12 +20,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name="bottomnav.thesevchefs.com.cooktasty.MainActivity"></activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name="bottomnav.thesevchefs.com.cooktasty.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name=".LoginActivity"
+            android:name="bottomnav.thesevchefs.com.cooktasty.LoginActivity"
             android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,14 +33,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RecipeDetailsActivity"
-            android:parentActivityName=".MainActivity">
+            android:name="bottomnav.thesevchefs.com.cooktasty.RecipeDetailsActivity"
+            android:parentActivityName="bottomnav.thesevchefs.com.cooktasty.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="bottomnav.thesevchefs.com.cooktasty.MainActivity" />
         </activity>
         <activity
-            android:name=".UploadActivity"
+            android:name="bottomnav.thesevchefs.com.cooktasty.UploadActivity"
             android:label="Upload" />
 
         <provider

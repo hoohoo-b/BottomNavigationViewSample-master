@@ -1,4 +1,4 @@
-package bottomnav.hitherejoe.com.bottomnavigationsample;
+package bottomnav.thesevchefs.com.cooktasty;
 
 import android.app.Application;
 

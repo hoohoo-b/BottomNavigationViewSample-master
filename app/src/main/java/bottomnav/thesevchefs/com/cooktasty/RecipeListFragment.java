@@ -1,4 +1,4 @@
-package bottomnav.hitherejoe.com.bottomnavigationsample;
+package bottomnav.thesevchefs.com.cooktasty;
 
 // FOR RECIPE TAB
 
@@ -12,9 +12,9 @@ import android.view.*;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.JsonReader;
-import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.NetworkUtils;
-import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.RecipeAdapter;
+import bottomnav.thesevchefs.com.cooktasty.utilities.JsonReader;
+import bottomnav.thesevchefs.com.cooktasty.utilities.NetworkUtils;
+import bottomnav.thesevchefs.com.cooktasty.utilities.RecipeAdapter;
 
 
 
