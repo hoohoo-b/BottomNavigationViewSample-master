@@ -16,6 +16,7 @@ import bottomnav.thesevchefs.com.cooktasty.utilities.NetworkUtils;
 import bottomnav.thesevchefs.com.cooktasty.utilities.RecipeAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 
 public class RecipeListFragment extends Fragment implements RecipeAdapter.ListItemClickListener {
@@ -30,6 +31,7 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.ListIt
     @BindView(R.id.rv_favrecipelist) RecyclerView mRecyclerView;
     @BindView(R.id.pb_loading_indicator) ProgressBar mLoadingIndicator;
     @BindView(R.id.tv_error_message_display) TextView mErrorMessageDisplay;
+    private Unbinder unbinder;
 
     public static RecipeListFragment newInstance() {
         RecipeListFragment fragment = new RecipeListFragment();
@@ -45,7 +47,7 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.ListIt
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_recipe, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         appContext = getActivity().getApplicationContext();
         authToken = MyApplication.getAuthToken();
@@ -125,6 +127,12 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.ListIt
         Intent intentToStartRecipeDetailActivity = new Intent(getActivity(), RecipeDetailsActivity.class);
         intentToStartRecipeDetailActivity.putExtra("RecipeDetails", recipeDetails);
         startActivity(intentToStartRecipeDetailActivity);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
 }

@@ -13,12 +13,14 @@ import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 
 public class BlankFragment extends Fragment {
 
     @BindView(R.id.btn_settings) Button btn_settings;
     @BindView(R.id.btn_logout) Button btn_logout;
+    private Unbinder unbinder;
 
     public static BlankFragment newInstance() {
         BlankFragment fragment = new BlankFragment();
@@ -34,7 +36,7 @@ public class BlankFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         return rootView;
     }
@@ -50,5 +52,12 @@ public class BlankFragment extends Fragment {
     public void onClickSettingButton(View view) {
         startActivity(new Intent(getActivity(), SettingsActivity.class));
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
 
 }
