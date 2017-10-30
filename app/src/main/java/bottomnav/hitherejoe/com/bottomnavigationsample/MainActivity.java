@@ -10,28 +10,20 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
-import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.JsonReader;
-import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.NetworkUtils;
 import bottomnav.hitherejoe.com.bottomnavigationsample.utilities.RecipeAdapter;
 
-public class MainActivity extends AppCompatActivity implements RecipeAdapter.ListItemClickListener {
+public class MainActivity extends AppCompatActivity {
 
     private static final int NUM_LIST_ITEMS = 100;
 
     private RecyclerView mRecyclerView;
     private RecipeAdapter mRecipeAdapter;
-
-    private TextView mErrorMessageDisplay;
-    private ProgressBar mLoadingIndicator;
-
-    private String authToken = "";
 
     static final int REQUEST_TAKE_PHOTO = 1;
 
@@ -40,33 +32,14 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String token = MyApplication.getAuthToken();
-        if (token != null) {
-            authToken = token;
-        }
-
-        final Context context = this;
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_recipelist);
-        mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
-        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setHasFixedSize(true);
-        mRecipeAdapter = new RecipeAdapter(this, NUM_LIST_ITEMS, this);
-        mRecyclerView.setAdapter(mRecipeAdapter);
-
         AHBottomNavigation bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
 
-// Create items
         AHBottomNavigationItem item1 = new AHBottomNavigationItem("Recipe", R.drawable.ic_restaurant_menu_black_24dp, R.color.colorAccent);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem("Favourites", R.drawable.ic_star_black_24dp, R.color.colorAccent);
         AHBottomNavigationItem item3 = new AHBottomNavigationItem("Upload", R.drawable.ic_add_black_24dp, R.color.colorAccent);
         AHBottomNavigationItem item4 = new AHBottomNavigationItem("Activity", R.drawable.ic_notifications_black_24dp, R.color.colorAccent);
         AHBottomNavigationItem item5 = new AHBottomNavigationItem("Me", R.drawable.ic_person_black_24dp, R.color.colorAccent);
 
-// Add items
         bottomNavigation.addItem(item1);
         bottomNavigation.addItem(item2);
         bottomNavigation.addItem(item3);
@@ -79,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
                 if (position == 0) {
-                    RecipeActivity recipeFragment = new RecipeActivity();
+                    RecipeListFragment recipeFragment = new RecipeListFragment();
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, recipeFragment).commit();
                 } else if (position == 1) {
                     FavRecipeFragment favRecipeFragment = new FavRecipeFragment();
@@ -102,74 +75,9 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
             }
         });
 
-        loadRecipeListData();
-    }
-
-    public void loadRecipeListData() {
-        showRecipeListDataView();
-        getRecipeNameList();
-    }
-
-    private void getRecipeNameList() {
-        new FetchRecipeList().execute("https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/list/", "GET", authToken);
-    }
-
-    private void showRecipeListDataView() {
-        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
-        mRecyclerView.setVisibility(View.VISIBLE);
-    }
-
-    private void showErrorMessage() {
-        mRecyclerView.setVisibility(View.INVISIBLE);
-        mErrorMessageDisplay.setVisibility(View.VISIBLE);
-    }
-
-    public void onListItemClick(String recipeList) {
-        setContentView(R.layout.recipe_details);
-        Context context = this;
-        Class recipeDetailsActivityClass = RecipeDetailsActivity.class;
-        Intent intentToStartDetailActivity = new Intent(context, recipeDetailsActivityClass);
-        intentToStartDetailActivity.putExtra("RecipeDetails", recipeList);
-        startActivity(intentToStartDetailActivity);
-    }
-
-    public class FetchRecipeList extends AsyncTask<String, Void, String[]> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected String[] doInBackground(String... params) {
-            String urlString = params[0];
-            String requestMethod = params[1];
-            String authToken = params[2];
-
-            String output;
-            String[] recipeList = null;
-
-            try {
-                output = NetworkUtils.getResponseFromHttpUrl(urlString, requestMethod, authToken);
-                recipeList = JsonReader.retrieveRecipeList(output);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return recipeList;
-        }
-
-
-        @Override
-        protected void onPostExecute(String[] recipeListData) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (recipeListData != null) {
-                showRecipeListDataView();
-                mRecipeAdapter.setRecipeNameListData(recipeListData);
-            } else {
-                showErrorMessage();
-            }
-        }
+//        load default fragment
+        RecipeListFragment recipeFragment = new RecipeListFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, recipeFragment).commit();
 
     }
 
