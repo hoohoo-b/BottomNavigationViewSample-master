@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
     private RecipeAdapter mRecipeAdapter;
 
     private TextView mErrorMessageDisplay;
-
     private ProgressBar mLoadingIndicator;
 
     private String authToken = "";
