@@ -41,7 +41,8 @@
         </activity>
         <activity
             android:name="bottomnav.thesevchefs.com.cooktasty.UploadActivity"
-            android:label="Upload" />
+            android:label="Upload"
+            android:parentActivityName="bottomnav.thesevchefs.com.cooktasty.MainActivity"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

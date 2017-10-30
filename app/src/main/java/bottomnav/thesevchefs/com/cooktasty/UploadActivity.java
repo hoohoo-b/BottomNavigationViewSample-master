@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ProgressBar;
 
 import org.json.JSONException;
 
@@ -87,16 +88,6 @@ public class UploadActivity extends AppCompatActivity {
 
         if (intentThatStartedThisActivity != null) {
             imageUri = intentThatStartedThisActivity.getData();
-
-//            todo #1: FOR STELLA TO REFFERENCE
-//            System.out.println("---------START UPLOAD FOOD IMAGE TEST------------");
-//
-//            UploadRecipeImageAsyncTask uploadRecipeImageTask = new UploadRecipeImageAsyncTask(imageUri, this.getContentResolver());
-//            uploadRecipeImageTask.execute("https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/image/upload/2/", "32ff65c24c42a5efa074ad4e5804f098bc0f8447");
-//
-//            System.out.println("---------END UPLOAD FOOD IMAGE TEST------------");
-
-
             try {
                 recipeImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
             } catch (IOException e) {
@@ -161,14 +152,7 @@ public class UploadActivity extends AppCompatActivity {
             case R.id.action_next:
                 String data = getDataInputsPart1();
                 new UploadRecipe().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/upload/", "POST", data, authToken);
-//                UploadRecipeImageAsyncTask uploadRecipeImageTask = new UploadRecipeImageAsyncTask(imageUri, this.getContentResolver());
-//                try {
-//                    recipeId = JsonReader.getRecipeIdFromResult(resultOutput);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//                uploadRecipeImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/image/upload/" + recipeId + "/", "32ff65c24c42a5efa074ad4e5804f098bc0f8447");
-                return true;
+                 return true;
         }
 
         return super.onOptionsItemSelected(item);
