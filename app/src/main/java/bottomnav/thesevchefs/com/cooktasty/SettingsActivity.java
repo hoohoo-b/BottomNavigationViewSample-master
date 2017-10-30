@@ -1,4 +1,4 @@
-package bottomnav.thesevchefs.com.bottomnavigationsample;
+package bottomnav.thesevchefs.com.cooktasty;
 
 // FOR SETTINGS
 

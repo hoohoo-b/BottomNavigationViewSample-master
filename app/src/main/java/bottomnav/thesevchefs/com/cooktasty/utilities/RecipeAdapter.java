@@ -1,4 +1,4 @@
-package bottomnav.thesevchefs.com.bottomnavigationsample.utilities;
+package bottomnav.thesevchefs.com.cooktasty.utilities;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
-import bottomnav.thesevchefs.com.bottomnavigationsample.R;
+import bottomnav.thesevchefs.com.cooktasty.R;
 
 /**
  * Created by Allets on 9/10/2017.

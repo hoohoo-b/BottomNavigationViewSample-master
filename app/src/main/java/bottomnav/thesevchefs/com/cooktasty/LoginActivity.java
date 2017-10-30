@@ -1,4 +1,4 @@
-package bottomnav.thesevchefs.com.bottomnavigationsample;
+package bottomnav.thesevchefs.com.cooktasty;
 
 // FOR LOGIN
 
@@ -37,7 +37,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.security.auth.login.LoginException;
 
-import bottomnav.thesevchefs.com.bottomnavigationsample.utilities.NetworkUtils;
+import bottomnav.thesevchefs.com.cooktasty.utilities.NetworkUtils;
 
 /**
  * A login screen that offers login via email/password.

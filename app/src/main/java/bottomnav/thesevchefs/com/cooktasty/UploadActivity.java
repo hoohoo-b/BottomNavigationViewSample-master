@@ -1,4 +1,4 @@
-package bottomnav.thesevchefs.com.bottomnavigationsample;
+package bottomnav.thesevchefs.com.cooktasty;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -28,8 +28,8 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import bottomnav.thesevchefs.com.bottomnavigationsample.utilities.JsonReader;
-import bottomnav.thesevchefs.com.bottomnavigationsample.utilities.NetworkUtils;
+import bottomnav.thesevchefs.com.cooktasty.utilities.JsonReader;
+import bottomnav.thesevchefs.com.cooktasty.utilities.NetworkUtils;
 
 /**
  * Created by Allets on 21/10/2017.

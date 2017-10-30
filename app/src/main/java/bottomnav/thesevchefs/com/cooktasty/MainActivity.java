@@ -1,4 +1,4 @@
-package bottomnav.thesevchefs.com.bottomnavigationsample;
+package bottomnav.thesevchefs.com.cooktasty;
 
 // FOR MAIN PAGE AFTER LOGIN
 
@@ -11,7 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
-import bottomnav.thesevchefs.com.bottomnavigationsample.utilities.RecipeAdapter;
+import bottomnav.thesevchefs.com.cooktasty.utilities.RecipeAdapter;
 
 public class MainActivity extends AppCompatActivity {
 

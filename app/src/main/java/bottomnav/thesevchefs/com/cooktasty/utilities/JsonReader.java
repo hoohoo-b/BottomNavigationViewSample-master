@@ -1,4 +1,4 @@
-package bottomnav.thesevchefs.com.bottomnavigationsample.utilities;
+package bottomnav.thesevchefs.com.cooktasty.utilities;
 
 import org.json.JSONArray;
 import org.json.JSONException;

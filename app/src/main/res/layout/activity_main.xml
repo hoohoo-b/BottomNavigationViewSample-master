@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/fragmentp"
-        android:name="bottomnav.thesevchefs.com.bottomnavigationsample.RecipeListFragment"
+        android:name="bottomnav.thesevchefs.com.cooktasty.RecipeListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
