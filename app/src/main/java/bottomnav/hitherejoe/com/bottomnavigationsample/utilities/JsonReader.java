@@ -135,7 +135,8 @@ public class JsonReader {
 
     public static String getRecipeIdFromResult(String result) throws JSONException{
         JSONObject resultOutput = new JSONObject(result);
-        return resultOutput.getString("id");
+        int recipeId = resultOutput.getInt("recipe_id");
+        return Integer.toString(recipeId);
     }
 
 
