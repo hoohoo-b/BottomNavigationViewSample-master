@@ -2,17 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="bottomnav.hitherejoe.com.bottomnavigationsample.FavouriteActivity">
+    android:background="@color/white"
+    tools:context="bottomnav.hitherejoe.com.bottomnavigationsample.FavRecipeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <fragment
-        android:id="@+id/fragmentp"
-        android:name="bottomnav.hitherejoe.com.bottomnavigationsample.FavouriteActivity"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_recipelist"
+        android:id="@+id/rv_favrecipelist"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -31,7 +26,5 @@
         android:layout_height="42dp"
         android:layout_gravity="center"
         android:visibility="invisible" />
-
-    </fragment>
 
 </FrameLayout>

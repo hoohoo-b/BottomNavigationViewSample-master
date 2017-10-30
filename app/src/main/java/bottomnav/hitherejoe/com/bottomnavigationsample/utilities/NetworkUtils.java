@@ -8,7 +8,6 @@ import android.content.ContentResolver;
 import android.net.Uri;
 
 import java.io.DataOutputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -154,15 +153,13 @@ public class NetworkUtils {
         URL url = new URL(urlstring);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-        // Allow Inputs &amp; Outputs.
         connection.setDoInput(true);
         connection.setDoOutput(true);
         connection.setUseCaches(false);
 
-        // Set HTTP method to POST.
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Authorization", "Token " + tokenValue);
-//        connection.setRequestProperty("Connection", "Keep-Alive");
+
         connection.setRequestProperty("Cache-Control", "no-cache");
         connection.setRequestProperty("Postman-Token", "4c55b432-fb89-0c29-214a-87e8a756bd91");
         connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);

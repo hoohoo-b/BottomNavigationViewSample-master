@@ -11,15 +11,6 @@ import android.view.ViewGroup;
 import android.widget.*;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link BlankFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link BlankFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-
 public class BlankFragment extends Fragment implements View.OnClickListener {
 //    Button Setting = (Button)findViewById(R.id.open_activity_button);
 
@@ -40,7 +31,7 @@ public class BlankFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View myView = inflater.inflate(R.layout.fragment_blank, container, false);
+        View myView = inflater.inflate(R.layout.fragment_settings, container, false);
         btn_settings = (Button) myView.findViewById(R.id.btn_settings);
         btn_settings.setOnClickListener(this);
         btn_logout = (Button) myView.findViewById(R.id.btn_logout);

@@ -44,7 +44,7 @@ public class JsonReader {
         JSONObject recipeListJson = new JSONObject(output);
         String[] recipeListData = null;
 
-        JSONArray recipeData = recipeListJson.getJSONArray("data");
+        JSONArray recipeData = recipeListJson.getJSONArray("results");
         if (recipeData != null) {
             for (int i = 0; i < recipeData.length(); i++) {
                 list.add(recipeData.get(i).toString());
