@@ -31,6 +31,8 @@ import java.util.ArrayList;
 
 import bottomnav.thesevchefs.com.cooktasty.utilities.JsonReader;
 import bottomnav.thesevchefs.com.cooktasty.utilities.NetworkUtils;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Allets on 21/10/2017.
@@ -45,27 +47,29 @@ public class UploadActivity extends AppCompatActivity {
     String[] measurement = {"portion", "tbsp", "tsp", "cup", "kg"};
     ArrayList<String> ingredientsList = new ArrayList<String>();
 
-    EditText mName;
-    EditText mDescription;
-    Spinner mHours;
-    Spinner mMinutes;
-    Spinner mIngredients;
-    TextView mIngredientSelected;
-    Spinner mQuantity;
-    Spinner mMeasurement;
-    Spinner mDifficulty;
-    Button btnAdd;
-    Button btnSelect;
-    Button btnRemove;
+    @BindView(R.id.et_recipe_upload_name) EditText mName;
+    @BindView(R.id.et_recipe_upload_description) EditText mDescription;
+    @BindView(R.id.spinner_recipe_duration_hour) Spinner mHours;
+    @BindView(R.id.spinner_recipe_duration_minute) Spinner mMinutes;
+    @BindView(R.id.spinner_recipe_ingredients) Spinner mIngredients;
+    @BindView(R.id.tv_recipe_ingredient_selected) TextView mIngredientSelected;
+    @BindView(R.id.spinner_recipe_quantity) Spinner mQuantity;
+    @BindView(R.id.spinner_recipe_quantity_measurement) Spinner mMeasurement;
+    @BindView(R.id.spinner_recipe_difficulty) Spinner mDifficulty;
+    @BindView(R.id.btnAdd) Button btnAdd;
+    @BindView(R.id.btnSelectIngredient) Button btnSelect;
+    @BindView(R.id.btnRemoveIngredient) Button btnRemove;
+    @BindView(R.id.iv_recipe_upload_image) ImageView mImage;
+
+    @BindView(R.id.ll_recipe_upload_page) LinearLayout mRecipeUploadPage;
+    @BindView(R.id.tv_error_message_display) TextView mErrorMessageDisplay;
+    @BindView(R.id.pb_loading_indicator) ProgressBar mLoadingIndicator;
+
     Bitmap recipeImage;
-    ImageView mImage;
     String authToken = "";
     String resultOutput = null;
     String[] ingredientListOutput = null;
     Uri imageUri;
-    LinearLayout mRecipeUploadPage;
-    private TextView mErrorMessageDisplay;
-    private ProgressBar mLoadingIndicator;
 
     ArrayAdapter<String> hourAdapter;
     ArrayAdapter<String> minuteAdapter;
@@ -100,38 +104,17 @@ public class UploadActivity extends AppCompatActivity {
             authToken = MyApplication.getAuthToken();
         }
 
-        mRecipeUploadPage = (LinearLayout) findViewById(R.id.ll_recipe_upload_page);
-        mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
-        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-
-        mName = (EditText) findViewById(R.id.et_recipe_upload_name);
-        mDescription = (EditText) findViewById(R.id.et_recipe_upload_description);
-        mHours = (Spinner) findViewById(R.id.spinner_recipe_duration_hour);
-        mMinutes = (Spinner) findViewById(R.id.spinner_recipe_duration_minute);
-        mIngredients = (Spinner) findViewById(R.id.spinner_recipe_ingredients);
-        mIngredientSelected = (TextView) findViewById(R.id.tv_recipe_ingredient_selected);
-        mQuantity = (Spinner) findViewById(R.id.spinner_recipe_quantity);
-        mMeasurement = (Spinner) findViewById(R.id.spinner_recipe_quantity_measurement);
-        mDifficulty = (Spinner) findViewById(R.id.spinner_recipe_difficulty);
-        btnAdd = (Button) findViewById(R.id.btnAdd);
-        btnSelect = (Button) findViewById(R.id.btnSelectIngredient);
-        btnRemove = (Button) findViewById(R.id.btnRemoveIngredient);
-        mImage = (ImageView) findViewById(R.id.iv_recipe_upload_image);
+        ButterKnife.bind(this);
 
         mImage.setImageBitmap(recipeImage);
 
         getIngredientsNameList();
 
-        hourAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, hours);
-        minuteAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, minutes);
-        quantityAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, quantity);
-        measurementAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, measurement);
-        difficultyAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, difficulty);
+        hourAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, hours);
+        minuteAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, minutes);
+        quantityAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, quantity);
+        measurementAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, measurement);
+        difficultyAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, difficulty);
 
         viewItemsOnSpinner();
     }
