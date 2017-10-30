@@ -350,8 +350,6 @@ public class UploadActivity extends AppCompatActivity {
             String output = null;
             try {
                 output = NetworkUtils.imageUploadPost(urlString, authToken, imageUri, this.cr, this.imageFileName);
-                System.out.println(output);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
