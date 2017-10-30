@@ -17,8 +17,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int NUM_LIST_ITEMS = 100;
 
-    private RecyclerView mRecyclerView;
-    private RecipeAdapter mRecipeAdapter;
 
     static final int REQUEST_TAKE_PHOTO = 1;
 
