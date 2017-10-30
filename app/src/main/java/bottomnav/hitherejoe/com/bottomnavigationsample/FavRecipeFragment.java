@@ -3,6 +3,7 @@ package bottomnav.hitherejoe.com.bottomnavigationsample;
 // FOR FAVOURITE ACTIVITY... CURRENTLY BLANK
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -96,8 +97,7 @@ public class FavRecipeFragment extends Fragment implements RecipeAdapter.ListIte
             String[] recipeList = null;
 
             try {
-                // authToken
-                output = NetworkUtils.getResponseFromHttpUrl(urlString, "GET", "32ff65c24c42a5efa074ad4e5804f098bc0f8447");
+                output = NetworkUtils.getResponseFromHttpUrl(urlString, "GET", authToken);
                 recipeList = JsonReader.retrieveRecipeList(output);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -112,24 +112,19 @@ public class FavRecipeFragment extends Fragment implements RecipeAdapter.ListIte
                 showRecipeListDataView();
                 mRecipeAdapter.setRecipeNameListData(recipeListData);
             } else {
+                // user is not login message
                 showErrorMessage();
             }
         }
 
     }
 
+    public void onListItemClick(String recipeDetails) {
 
-    public void onListItemClick(String recipeList) {
-//        setContentView(R.layout.fragment_recipe_details);
+        Intent intentToStartRecipeDetailActivity = new Intent(getActivity(), RecipeDetailsActivity.class);
+        intentToStartRecipeDetailActivity.putExtra("RecipeDetails", recipeDetails);
+        startActivity(intentToStartRecipeDetailActivity);
 
-//        RecipeDetailsActivity recipeDetailFragment = new RecipeDetailsActivity();
-//        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, recipeDetailFragment).commit();
-
-//        Context context = getActivity().getApplicationContext();
-//        Class recipeDetailsActivityClass = RecipeDetailsActivity.class;
-//        Intent intentToStartDetailActivity = new Intent(context, recipeDetailsActivityClass);
-//        intentToStartDetailActivity.putExtra("RecipeDetails", recipeList);
-//        startActivity(intentToStartDetailActivity);
     }
 
 }
