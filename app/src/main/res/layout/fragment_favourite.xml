@@ -5,7 +5,6 @@
     android:background="@color/white"
     tools:context="bottomnav.hitherejoe.com.bottomnavigationsample.FavRecipeFragment">
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_favrecipelist"
         android:layout_width="match_parent"
