@@ -63,6 +63,8 @@ public class UploadActivity extends AppCompatActivity {
     String[] ingredientListOutput = null;
     Uri imageUri;
     LinearLayout mRecipeUploadPage;
+    private TextView mErrorMessageDisplay;
+    private ProgressBar mLoadingIndicator;
 
     ArrayAdapter<String> hourAdapter;
     ArrayAdapter<String> minuteAdapter;
@@ -108,6 +110,8 @@ public class UploadActivity extends AppCompatActivity {
         }
 
         mRecipeUploadPage = (LinearLayout) findViewById(R.id.ll_recipe_upload_page);
+        mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
+        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
         mName = (EditText) findViewById(R.id.et_recipe_upload_name);
         mDescription = (EditText) findViewById(R.id.et_recipe_upload_description);
@@ -131,7 +135,6 @@ public class UploadActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item, hours);
         minuteAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, minutes);
-        System.out.print(ingredientsList);
         quantityAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, quantity);
         measurementAdapter = new ArrayAdapter<String>(this,
@@ -153,18 +156,18 @@ public class UploadActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int itemId = item.getItemId();
-        String recipeId = null;
 
         switch (itemId) {
             case R.id.action_next:
                 String data = getDataInputsPart1();
                 new UploadRecipe().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/upload/", "POST", data, authToken);
+//                UploadRecipeImageAsyncTask uploadRecipeImageTask = new UploadRecipeImageAsyncTask(imageUri, this.getContentResolver());
 //                try {
 //                    recipeId = JsonReader.getRecipeIdFromResult(resultOutput);
 //                } catch (JSONException e) {
 //                    e.printStackTrace();
 //                }
-//                new UploadRecipe();
+//                uploadRecipeImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/image/upload/" + recipeId + "/", "32ff65c24c42a5efa074ad4e5804f098bc0f8447");
                 return true;
         }
 
@@ -172,18 +175,18 @@ public class UploadActivity extends AppCompatActivity {
     }
 
     private void getIngredientsNameList() {
+        showIngredientListDataView();
         new FetchIngredientList().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "https://hidden-springs-80932.herokuapp.com/api/v1.0/ingredient/list/", "GET", authToken);
-        if (ingredientListOutput != null) {
-//            ArrayList<String> listOfIngredientNames = null;
-//            for (int i = 0; i < ingredientListOutput.length; i++) {
-//                try {
-//                    listOfIngredientNames.add(JsonReader.getRecipeName(ingredientListOutput[i]));
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            ingredientsList = listOfIngredientNames;
-        }
+    }
+
+    private void showIngredientListDataView() {
+        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
+        mRecipeUploadPage.setVisibility(View.VISIBLE);
+    }
+
+    private void showErrorMessage() {
+        mRecipeUploadPage.setVisibility(View.INVISIBLE);
+        mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
     private String getDataInputsPart1() {
@@ -253,6 +256,7 @@ public class UploadActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            mLoadingIndicator.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -275,9 +279,23 @@ public class UploadActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            uploadRecipe(s);
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            showIngredientListDataView();
             mToast.setText(s);
             resultOutput = s;
         }
+    }
+
+    private void uploadRecipe(String output) {
+        String recipeId = null;
+        try {
+            recipeId = JsonReader.getRecipeIdFromResult(output);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        UploadRecipeImageAsyncTask uploadRecipeImageTask = new UploadRecipeImageAsyncTask(imageUri, this.getContentResolver());
+        uploadRecipeImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/image/upload/" + recipeId + "/", "32ff65c24c42a5efa074ad4e5804f098bc0f8447");
     }
 
 
@@ -286,6 +304,7 @@ public class UploadActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            mLoadingIndicator.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -310,9 +329,10 @@ public class UploadActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String[] ingredientListData) {
-
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
             ingredientListOutput = ingredientListData;
             if (ingredientListOutput != null && ingredientListOutput.length > 0) {
+                showIngredientListDataView();
                 for (int i = 0; i < ingredientListOutput.length; i++) {
                     try {
                         ingredientsList.add(JsonReader.getRecipeName(ingredientListOutput[i]));
@@ -324,6 +344,8 @@ public class UploadActivity extends AppCompatActivity {
                         android.R.layout.simple_spinner_item, ingredientsList);
                 ingredientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 mIngredients.setAdapter(ingredientAdapter);
+            } else {
+                showErrorMessage();
             }
         }
 
