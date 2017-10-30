@@ -23,8 +23,7 @@ public class MyApplication extends Application {
     }
 
     public static void setEmail(String input) {
-        String email = input.split("@")[0];
-        mEmail = email;
+        mEmail = input;
     }
 
 }

@@ -1,8 +1,7 @@
 package bottomnav.thesevchefs.com.cooktasty;
 
-// FOR RECIPE TAB
-
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,18 +14,22 @@ import android.widget.TextView;
 import bottomnav.thesevchefs.com.cooktasty.utilities.JsonReader;
 import bottomnav.thesevchefs.com.cooktasty.utilities.NetworkUtils;
 import bottomnav.thesevchefs.com.cooktasty.utilities.RecipeAdapter;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class RecipeListFragment extends Fragment implements RecipeAdapter.ListItemClickListener {
 
     private static final int NUM_LIST_ITEMS = 100;
-    private RecyclerView mRecyclerView;
-    private RecipeAdapter mRecipeAdapter;
-    private ProgressBar mLoadingIndicator;
-    private TextView mErrorMessageDisplay;
+
     private Context appContext;
     private String authToken;
+
+    private RecipeAdapter mRecipeAdapter;
+
+    @BindView(R.id.rv_favrecipelist) RecyclerView mRecyclerView;
+    @BindView(R.id.pb_loading_indicator) ProgressBar mLoadingIndicator;
+    @BindView(R.id.tv_error_message_display) TextView mErrorMessageDisplay;
 
     public static RecipeListFragment newInstance() {
         RecipeListFragment fragment = new RecipeListFragment();
@@ -42,22 +45,18 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.ListIt
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_recipe, container, false);
+        ButterKnife.bind(this, rootView);
 
         appContext = getActivity().getApplicationContext();
         authToken = MyApplication.getAuthToken();
         if (authToken == null) { authToken = ""; }
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv_favrecipelist);
-        mLoadingIndicator = (ProgressBar) rootView.findViewById(R.id.pb_loading_indicator);
-        mErrorMessageDisplay = (TextView) rootView.findViewById(R.id.tv_error_message_display);
-
+        mRecipeAdapter = new RecipeAdapter(appContext, NUM_LIST_ITEMS, this);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mRecipeAdapter = new RecipeAdapter(appContext, NUM_LIST_ITEMS, this);
         mRecyclerView.setAdapter(mRecipeAdapter);
-
         mRecyclerView.setVisibility(View.VISIBLE);
 
         return rootView;
@@ -122,7 +121,10 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.ListIt
     }
 
     @Override
-    public void onListItemClick(String recipeList) {
-
+    public void onListItemClick(String recipeDetails) {
+        Intent intentToStartRecipeDetailActivity = new Intent(getActivity(), RecipeDetailsActivity.class);
+        intentToStartRecipeDetailActivity.putExtra("RecipeDetails", recipeDetails);
+        startActivity(intentToStartRecipeDetailActivity);
     }
+
 }

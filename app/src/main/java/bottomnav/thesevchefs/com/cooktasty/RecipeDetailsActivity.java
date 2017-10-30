@@ -13,15 +13,19 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import bottomnav.thesevchefs.com.cooktasty.utilities.JsonReader;
 import bottomnav.thesevchefs.com.cooktasty.utilities.NetworkUtils;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Allets on 19/10/2017.
  */
 
-public class RecipeDetailsActivity extends AppCompatActivity implements View.OnClickListener {
+public class RecipeDetailsActivity extends AppCompatActivity {
 
     String recipeName = "";
     String recipeDescription = "";
@@ -30,68 +34,60 @@ public class RecipeDetailsActivity extends AppCompatActivity implements View.OnC
     String recipeTime = "";
     String recipeIngredients = "";
     Boolean recipeIsFavourite = false;
-    private String recipeList;
+
     private String authToken;
-    private String mEmail;
     private String recipeId;
-    private TextView mRecipeName;
-    private TextView mRecipeDescription;
-    private ImageView mRecipeImageView;
-    private TextView mRecipeDifficulty;
-    private TextView mRecipeTime;
-    private TextView mRecipeIngredients;
-    private ImageView mRecipeIsFavourited;
+
+    @BindView(R.id.tv_recipe_details_name) TextView mRecipeName;
+    @BindView(R.id.tv_recipe_details_description) TextView mRecipeDescription;
+    @BindView(R.id.iv_recipe_details_image) ImageView mRecipeImageView;
+    @BindView(R.id.tv_recipe_details_difficulty) TextView mRecipeDifficulty;
+    @BindView(R.id.tv_recipe_details_time) TextView mRecipeTime;
+    @BindView(R.id.tv_recipe_details_ingredients) TextView mRecipeIngredients;
+    @BindView(R.id.iv_recipe_isfavourite) ImageView mRecipeIsFavourited;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipe_details);
-
-        mRecipeName = (TextView) findViewById(R.id.tv_recipe_details_name);
-        mRecipeDescription = (TextView) findViewById(R.id.tv_recipe_details_description);
-        mRecipeImageView = (ImageView) findViewById(R.id.iv_recipe_details_image);
-        mRecipeDifficulty = (TextView) findViewById(R.id.tv_recipe_details_difficulty);
-        mRecipeTime = (TextView) findViewById(R.id.tv_recipe_details_time);
-        mRecipeIngredients = (TextView) findViewById(R.id.tv_recipe_details_ingredients);
-        mRecipeIsFavourited = (ImageView) findViewById(R.id.iv_recipe_isfavourite);
-        mRecipeIsFavourited.setOnClickListener(this);
         authToken = MyApplication.getAuthToken();
-        mEmail = MyApplication.getEmail();
+
+        ButterKnife.bind(this);
 
         Intent intentThatStartedThisActivity = getIntent();
+        if (intentThatStartedThisActivity != null
+                && intentThatStartedThisActivity.hasExtra("RecipeDetails")) {
 
-        if (intentThatStartedThisActivity != null) {
-            if (intentThatStartedThisActivity.hasExtra("RecipeDetails")) {
-                recipeList = intentThatStartedThisActivity.getStringExtra("RecipeDetails");
+            String recipedDetailJson = intentThatStartedThisActivity.getStringExtra("RecipeDetails");
 
-                try {
-                    recipeId = JsonReader.getRecipeId(recipeList);
-                    recipeName = JsonReader.getRecipeName(recipeList);
-                    recipeDescription = JsonReader.getRecipeDescription(recipeList);
-                    imageURL = JsonReader.getRecipeImageUrl(recipeList);
-                    recipeDifficulty = JsonReader.getRecipeDifficultyLevel(recipeList);
-                    recipeTime = JsonReader.getRecipeTimeRequired(recipeList);
-                    recipeIngredients = JsonReader.getRecipeIngredients(recipeList);
-                    recipeIsFavourite = JsonReader.getRecipeIsFavourite(recipeList);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Picasso.with(this)
-                        .load(imageURL)
-                        .into(mRecipeImageView);
-                mRecipeName.setText(recipeName);
-                mRecipeDescription.setText(recipeDescription);
-                mRecipeDifficulty.setText(recipeDifficulty);
-                mRecipeTime.setText(recipeTime);
-                mRecipeIngredients.setText(recipeIngredients);
-
-                if (recipeIsFavourite) {
-                    mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_true);
-                } else {
-                    mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_false);
-                }
+            try {
+                recipeId = JsonReader.getRecipeId(recipedDetailJson);
+                recipeName = JsonReader.getRecipeName(recipedDetailJson);
+                recipeDescription = JsonReader.getRecipeDescription(recipedDetailJson);
+                imageURL = JsonReader.getRecipeImageUrl(recipedDetailJson);
+                recipeDifficulty = JsonReader.getRecipeDifficultyLevel(recipedDetailJson);
+                recipeTime = JsonReader.getRecipeTimeRequired(recipedDetailJson);
+                recipeIngredients = JsonReader.getRecipeIngredients(recipedDetailJson);
+                recipeIsFavourite = JsonReader.getRecipeIsFavourite(recipedDetailJson);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+
+            Picasso.with(this)
+                    .load(imageURL)
+                    .into(mRecipeImageView);
+            mRecipeName.setText(recipeName);
+            mRecipeDescription.setText(recipeDescription);
+            mRecipeDifficulty.setText(recipeDifficulty);
+            mRecipeTime.setText(recipeTime);
+            mRecipeIngredients.setText(recipeIngredients);
+
+            if (recipeIsFavourite) {
+                mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_true);
+            } else {
+                mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_false);
+            }
+
         }
     }
 
@@ -102,23 +98,18 @@ public class RecipeDetailsActivity extends AppCompatActivity implements View.OnC
         return true;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.iv_recipe_isfavourite:
-                if (recipeIsFavourite) {
-                    mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_false);
-                    recipeIsFavourite = false;
-                    new EditRecipeFavourite().execute("https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/favourite/" + recipeId + "/", "DELETE", authToken);
-                } else {
-                    mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_true);
-                    recipeIsFavourite = true;
-                    new EditRecipeFavourite().execute("https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/favourite/" + recipeId + "/", "POST", authToken);
-                }
-        }
+    @OnClick(R.id.iv_recipe_isfavourite)
+    public void onClickFavouriteImageView(View v) {
+        new SetRecipeAsFavouriteAsyncTask(!recipeIsFavourite).execute(recipeId, authToken);
     }
 
-    public class EditRecipeFavourite extends AsyncTask<String, Void, String> {
+    public class SetRecipeAsFavouriteAsyncTask extends AsyncTask<String, Void, String> {
+
+        private boolean favouriteStatus = false;
+
+        SetRecipeAsFavouriteAsyncTask(boolean status) {
+            this.favouriteStatus = status;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -127,16 +118,37 @@ public class RecipeDetailsActivity extends AppCompatActivity implements View.OnC
 
         @Override
         protected String doInBackground(String... params) {
-            String urlString = params[0];
-            String requestMethod = params[1];
-            String authToken = params[2];
+            String setRecipeId = params[0];
+            String apiAuthToken = params[1];
+
+            String setFavouriteStatusAPIurl = "https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/favourite/" + setRecipeId + "/";
+            String requestMethod = this.favouriteStatus ? "POST" : "DELETE";
 
             try {
-                NetworkUtils.getResponseFromHttpUrl(urlString, requestMethod, authToken);
+                String output = NetworkUtils.getResponseFromHttpUrl(setFavouriteStatusAPIurl, requestMethod, apiAuthToken);
+
+                JSONObject jsonObject = new JSONObject(output);
+                if (jsonObject.getBoolean("success")) {
+                    return "success";
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result == null) return;
+
+            recipeIsFavourite = this.favouriteStatus;
+            if (recipeIsFavourite) {
+                mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_true);
+            } else {
+                mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_false);
+            }
+
         }
 
     }

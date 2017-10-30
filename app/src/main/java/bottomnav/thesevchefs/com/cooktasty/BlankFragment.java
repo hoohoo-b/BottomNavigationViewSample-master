@@ -10,12 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class BlankFragment extends Fragment implements View.OnClickListener {
-//    Button Setting = (Button)findViewById(R.id.open_activity_button);
 
-    private static Button btn_settings;
-    private static Button btn_logout;
+public class BlankFragment extends Fragment {
+
+    @BindView(R.id.btn_settings) Button btn_settings;
+    @BindView(R.id.btn_logout) Button btn_logout;
 
     public static BlankFragment newInstance() {
         BlankFragment fragment = new BlankFragment();
@@ -28,28 +31,24 @@ public class BlankFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View myView = inflater.inflate(R.layout.fragment_settings, container, false);
-        btn_settings = (Button) myView.findViewById(R.id.btn_settings);
-        btn_settings.setOnClickListener(this);
-        btn_logout = (Button) myView.findViewById(R.id.btn_logout);
-        btn_logout.setOnClickListener(this);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        return myView;
+        View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
+        ButterKnife.bind(this, rootView);
+
+        return rootView;
     }
 
-
-    @Override
-    public void onClick(View v) {
-
-        switch (v.getId()) {
-            case R.id.btn_settings:
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                break;
-            case R.id.btn_logout:
-                startActivity(new Intent(getActivity(), LoginActivity.class));
-        }
+    @OnClick(R.id.btn_logout)
+    public void onClickLogoutButton(View view) {
+        MyApplication.setAuthToken(null);
+        MyApplication.setEmail(null);
+        startActivity(new Intent(getActivity(), LoginActivity.class));
     }
+
+    @OnClick(R.id.btn_settings)
+    public void onClickSettingButton(View view) {
+        startActivity(new Intent(getActivity(), SettingsActivity.class));
+    }
+
 }

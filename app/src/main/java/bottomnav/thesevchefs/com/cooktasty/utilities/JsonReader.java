@@ -53,23 +53,23 @@ public class JsonReader {
     }
 
     public static String getRecipeName(String output) throws JSONException {
-        JSONObject recipeListJson = new JSONObject(output);
-        return recipeListJson.getString("name");
+        JSONObject recipeJson = new JSONObject(output);
+        return recipeJson.getString("name");
     }
 
     public static String getRecipeImageUrl(String output) throws JSONException {
-        JSONObject recipeListJson = new JSONObject(output);
-        return recipeListJson.getString("image_url");
+        JSONObject recipeJson = new JSONObject(output);
+        return recipeJson.getString("image_url");
     }
 
     public static String getRecipeDescription(String output) throws JSONException {
-        JSONObject recipeListJson = new JSONObject(output);
-        return recipeListJson.getString("description");
+        JSONObject recipeJson = new JSONObject(output);
+        return recipeJson.getString("description");
     }
 
     public static String getRecipeUploadUserId(String output) throws JSONException {
-        JSONObject recipeListJson = new JSONObject(output);
-        return recipeListJson.getString("upload_by_user");
+        JSONObject recipeJson = new JSONObject(output);
+        return recipeJson.getString("upload_by_user");
     }
 
     public static String getRecipeDifficultyLevel(String output) throws JSONException {
@@ -90,13 +90,13 @@ public class JsonReader {
     }
 
     public static String getRecipeTimeRequired(String output) throws JSONException {
-        JSONObject recipeListJson = new JSONObject(output);
-        return recipeListJson.getString("time_required");
+        JSONObject recipeJson = new JSONObject(output);
+        return recipeJson.getString("time_required");
     }
 
     public static String getRecipeUploadDateTime(String output) throws JSONException {
-        JSONObject recipeListJson = new JSONObject(output);
-        return recipeListJson.getString("upload_datetime");
+        JSONObject recipeJson = new JSONObject(output);
+        return recipeJson.getString("upload_datetime");
     }
 
     public static String getRecipeIngredients(String output) throws JSONException {
@@ -106,13 +106,13 @@ public class JsonReader {
     }
 
     public static Boolean getRecipeIsFavourite(String output) throws JSONException {
-        JSONObject recipeListJson = new JSONObject(output);
-        return recipeListJson.getBoolean("is_favourited");
+        JSONObject recipeJson = new JSONObject(output);
+        return recipeJson.getBoolean("is_favourited");
     }
 
     public static String getRecipeId(String output) throws JSONException {
-        JSONObject recipeListJson = new JSONObject(output);
-        return recipeListJson.getString("id");
+        JSONObject recipeJson = new JSONObject(output);
+        return recipeJson.getString("id");
     }
 
     public static String getFormattedRecipe(){
