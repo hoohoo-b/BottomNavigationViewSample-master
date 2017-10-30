@@ -249,6 +249,8 @@ public class UploadActivity extends AppCompatActivity {
             uploadRecipe(s);
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             showIngredientListDataView();
+
+            // todo: toast not set causing error
             mToast.setText(s);
             resultOutput = s;
         }
