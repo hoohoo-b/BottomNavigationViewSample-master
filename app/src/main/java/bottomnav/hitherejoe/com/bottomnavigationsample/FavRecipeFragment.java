@@ -61,13 +61,23 @@ public class FavRecipeFragment extends Fragment implements RecipeAdapter.ListIte
 
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-//        get list of favourite recipes
+        showRecipeListDataView();
+        getRecipeNameList();
     }
 
-//    private void showRecipeListDataView() {
-//        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
-//        mRecyclerView.setVisibility(View.VISIBLE);
-//    }
+    private void showRecipeListDataView() {
+        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void showErrorMessage() {
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mErrorMessageDisplay.setVisibility(View.VISIBLE);
+    }
+
+    private void getRecipeNameList() {
+        new FetchFavouriteRecipeAsyncTask().execute("https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/favourites/", "GET", authToken);
+    }
 
     public class FetchFavouriteRecipeAsyncTask extends AsyncTask<String, Void, String[]> {
 
@@ -86,7 +96,8 @@ public class FavRecipeFragment extends Fragment implements RecipeAdapter.ListIte
             String[] recipeList = null;
 
             try {
-                output = NetworkUtils.getResponseFromHttpUrl(urlString, "GET", authToken);
+                // authToken
+                output = NetworkUtils.getResponseFromHttpUrl(urlString, "GET", "32ff65c24c42a5efa074ad4e5804f098bc0f8447");
                 recipeList = JsonReader.retrieveRecipeList(output);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -98,10 +109,10 @@ public class FavRecipeFragment extends Fragment implements RecipeAdapter.ListIte
         protected void onPostExecute(String[] recipeListData) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (recipeListData != null) {
-//                showRecipeListDataView();
+                showRecipeListDataView();
                 mRecipeAdapter.setRecipeNameListData(recipeListData);
             } else {
-//                showErrorMessage();
+                showErrorMessage();
             }
         }
 
