@@ -86,7 +86,7 @@ public class FavRecipeFragment extends Fragment implements RecipeAdapter.ListIte
             String[] recipeList = null;
 
             try {
-                output = NetworkUtils.getResponseFromHttpUrl(urlString, requestMethod, authToken);
+                output = NetworkUtils.getResponseFromHttpUrl(urlString, "GET", authToken);
                 recipeList = JsonReader.retrieveRecipeList(output);
             } catch (Exception e) {
                 e.printStackTrace();
