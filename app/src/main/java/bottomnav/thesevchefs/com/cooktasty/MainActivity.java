@@ -6,17 +6,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
-import bottomnav.thesevchefs.com.cooktasty.utilities.RecipeAdapter;
-
 public class MainActivity extends AppCompatActivity {
-
-    private static final int NUM_LIST_ITEMS = 100;
-
 
     static final int REQUEST_TAKE_PHOTO = 1;
 

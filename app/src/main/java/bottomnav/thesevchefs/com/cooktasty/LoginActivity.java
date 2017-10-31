@@ -25,8 +25,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,9 +35,6 @@ import java.util.concurrent.ExecutionException;
 
 import javax.security.auth.login.LoginException;
 
-import bottomnav.thesevchefs.com.cooktasty.cooktastyapi.APICallback;
-import bottomnav.thesevchefs.com.cooktasty.cooktastyapi.RecipeAPI;
-import bottomnav.thesevchefs.com.cooktasty.entity.Recipe;
 import bottomnav.thesevchefs.com.cooktasty.utilities.NetworkUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,21 +86,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         ButterKnife.bind(this);
 
-//  REFERENCE FOR USING cooktastyapi, ALSO CAN USE utilities.NetworkUtils
-//        RecipeAPI.getRecipeListAPI(this, "32ff65c24c42a5efa074ad4e5804f098bc0f8447", new APICallback(){
-//            public void onSuccess(Object result) {
-//                Recipe[] recipelist = (Recipe[]) result;
-//                System.out.println("--------success----------");
-//                System.out.println(recipelist);
-//            }
-//            public void onError(Object error) {
-//                VolleyError volleyError = (VolleyError) error;
-//                System.out.println("--------error----------");
-//            }
-//        });
+//        todo: use below for login
+//        UserAPI.getAuthTokenAPI(this, "admin@example.com", "qwe123qwe123",
+//                new APICallback() {
+//                    @Override
+//                    public void onSuccess(Object result) {
+//                        System.out.println((String) result);
+//                    }
+//                    @Override
+//                    public void onError(Object result) {
+//                        System.out.println("-------error--------");
+//                    }
+//                });
 
     }
 
