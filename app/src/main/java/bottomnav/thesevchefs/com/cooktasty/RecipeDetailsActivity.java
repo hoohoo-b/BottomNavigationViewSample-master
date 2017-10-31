@@ -1,7 +1,6 @@
 package bottomnav.thesevchefs.com.cooktasty;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -10,16 +9,17 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import bottomnav.thesevchefs.com.cooktasty.utilities.JsonReader;
-import bottomnav.thesevchefs.com.cooktasty.utilities.NetworkUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import com.android.volley.VolleyError;
+import com.squareup.picasso.Picasso;
+
+import bottomnav.thesevchefs.com.cooktasty.cooktastyapi.APICallback;
+import bottomnav.thesevchefs.com.cooktasty.cooktastyapi.RecipeAPI;
+import bottomnav.thesevchefs.com.cooktasty.entity.Recipe;
+import bottomnav.thesevchefs.com.cooktasty.entity.RecipeIngredient;
 
 /**
  * Created by Allets on 19/10/2017.
@@ -27,16 +27,9 @@ import butterknife.OnClick;
 
 public class RecipeDetailsActivity extends AppCompatActivity {
 
-    String recipeName = "";
-    String recipeDescription = "";
-    String imageURL = "";
-    String recipeDifficulty = "";
-    String recipeTime = "";
-    String recipeIngredients = "";
-    Boolean recipeIsFavourite = false;
+    Recipe thisActivityRecipe;
 
     private String authToken;
-    private String recipeId;
 
     @BindView(R.id.tv_recipe_details_name) TextView mRecipeName;
     @BindView(R.id.tv_recipe_details_description) TextView mRecipeDescription;
@@ -51,44 +44,66 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipe_details);
         authToken = MyApplication.getAuthToken();
+        if (authToken == null) { authToken = ""; }
 
         ButterKnife.bind(this);
 
         Intent intentThatStartedThisActivity = getIntent();
-        if (intentThatStartedThisActivity != null
-                && intentThatStartedThisActivity.hasExtra("RecipeDetails")) {
+        if (intentThatStartedThisActivity != null && intentThatStartedThisActivity.hasExtra("RecipeId")) {
 
-            String recipedDetailJson = intentThatStartedThisActivity.getStringExtra("RecipeDetails");
-
-            try {
-                recipeId = JsonReader.getRecipeId(recipedDetailJson);
-                recipeName = JsonReader.getRecipeName(recipedDetailJson);
-                recipeDescription = JsonReader.getRecipeDescription(recipedDetailJson);
-                imageURL = JsonReader.getRecipeImageUrl(recipedDetailJson);
-                recipeDifficulty = JsonReader.getRecipeDifficultyLevel(recipedDetailJson);
-                recipeTime = JsonReader.getRecipeTimeRequired(recipedDetailJson);
-                recipeIngredients = JsonReader.getRecipeIngredients(recipedDetailJson);
-                recipeIsFavourite = JsonReader.getRecipeIsFavourite(recipedDetailJson);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            Picasso.with(this)
-                    .load(imageURL)
-                    .into(mRecipeImageView);
-            mRecipeName.setText(recipeName);
-            mRecipeDescription.setText(recipeDescription);
-            mRecipeDifficulty.setText(recipeDifficulty);
-            mRecipeTime.setText(recipeTime);
-            mRecipeIngredients.setText(recipeIngredients);
-
-            if (recipeIsFavourite) {
-                mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_true);
-            } else {
-                mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_false);
-            }
+            long recipeId = intentThatStartedThisActivity.getLongExtra("RecipeId", 0);
+            RecipeAPI.getRecipeDetailAPI(this, authToken, recipeId, new APICallback(){
+                public void onSuccess(Object result) {
+                    Recipe recipe = (Recipe) result;
+                    initRecipeDetailActivityContent(recipe);
+                }
+                public void onError(Object error) {
+                    VolleyError volleyError = (VolleyError) error;
+                    volleyError.printStackTrace();
+                }
+            });
 
         }
+    }
+
+    public void initRecipeDetailActivityContent(Recipe recipe) {
+
+        this.thisActivityRecipe = recipe;
+
+        String recipeDifficulty;
+        switch (recipe.difficulty_level) {
+            case 0: recipeDifficulty = "easy";
+                break;
+            case 1: recipeDifficulty = "medium";
+                break;
+            case 2: recipeDifficulty = "hard";
+                break;
+            default: recipeDifficulty = "easy";
+        }
+
+        Picasso.with(this)
+                .load(recipe.image_url)
+                .into(mRecipeImageView);
+        mRecipeName.setText(recipe.name);
+        mRecipeDescription.setText(recipe.description);
+        mRecipeDifficulty.setText(recipeDifficulty);
+        mRecipeTime.setText(recipe.time_required.toString());
+
+        System.out.println("---------------------");
+        System.out.println(recipe.is_favourited);
+        System.out.println("---------------------");
+
+        if (recipe.is_favourited) {
+            mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_true);
+        } else {
+            mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_false);
+        }
+
+        String ingredientText = "";
+        for(RecipeIngredient ri : recipe.ingredients){
+            ingredientText = ingredientText + ri.ingredient.name + " " + ri.serving_size + "\n\r";
+        }
+        mRecipeIngredients.setText(ingredientText);
     }
 
     @Override
@@ -100,57 +115,25 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     @OnClick(R.id.iv_recipe_isfavourite)
     public void onClickFavouriteImageView(View v) {
-        new SetRecipeAsFavouriteAsyncTask(!recipeIsFavourite).execute(recipeId, authToken);
-    }
-
-    public class SetRecipeAsFavouriteAsyncTask extends AsyncTask<String, Void, String> {
-
-        private boolean favouriteStatus = false;
-
-        SetRecipeAsFavouriteAsyncTask(boolean status) {
-            this.favouriteStatus = status;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            String setRecipeId = params[0];
-            String apiAuthToken = params[1];
-
-            String setFavouriteStatusAPIurl = "https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/favourite/" + setRecipeId + "/";
-            String requestMethod = this.favouriteStatus ? "POST" : "DELETE";
-
-            try {
-                String output = NetworkUtils.getResponseFromHttpUrl(setFavouriteStatusAPIurl, requestMethod, apiAuthToken);
-
-                JSONObject jsonObject = new JSONObject(output);
-                if (jsonObject.getBoolean("success")) {
-                    return "success";
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (result == null) return;
-
-            recipeIsFavourite = this.favouriteStatus;
-            if (recipeIsFavourite) {
-                mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_true);
-            } else {
-                mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_false);
-            }
-
-        }
-
+        long recipeId = thisActivityRecipe.id;
+        boolean setToStatus = !thisActivityRecipe.is_favourited;
+        RecipeAPI.setFavouriteRecipeAPI(this, authToken, recipeId, setToStatus,
+                new APICallback(){
+                    @Override
+                    public void onSuccess(Object result) {
+                        thisActivityRecipe.is_favourited = !thisActivityRecipe.is_favourited;
+                        if (thisActivityRecipe.is_favourited) {
+                            mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_true);
+                        } else {
+                            mRecipeIsFavourited.setImageResource(R.drawable.ic_recipe_isfavourite_false);
+                        }
+                    }
+                    @Override
+                    public void onError(Object error) {
+                        VolleyError volleyError = (VolleyError) error;
+                        volleyError.printStackTrace();
+                    }
+                });
     }
 
 }
