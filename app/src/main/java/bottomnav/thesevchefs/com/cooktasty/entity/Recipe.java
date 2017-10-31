@@ -1,5 +1,6 @@
 package bottomnav.thesevchefs.com.cooktasty.entity;
 
+import java.sql.Time;
 import java.util.Date;
 
 /**
@@ -13,10 +14,10 @@ public class Recipe {
     String description;
     long upload_by_user;
     int difficulty_level;
-    String time_required;
+    Time time_required;
     Date upload_datetime;
     String image_url;
-    Ingredient[] ingredients;
+    RecipeIngredient[] ingredients;
     Boolean is_favourited;
     RecipeInstruction[] instructions;
 

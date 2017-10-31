@@ -25,14 +25,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -95,13 +94,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         ButterKnife.bind(this);
 
-//        RecipeAPI.getRecipeListAPI(this, new APICallback(){
+//        RecipeAPI.getRecipeListAPI(this, "32ff65c24c42a5efa074ad4e5804f098bc0f8447", new APICallback(){
 //            public void onSuccess(Object result) {
-//                List<Recipe> recipelist = (List<Recipe>) result;
+//                Recipe[] recipelist = (Recipe[]) result;
 //                System.out.println("--------success----------");
 //                System.out.println(recipelist);
 //            }
-//            public void onError(Object result) {
+//            public void onError(Object error) {
+//                VolleyError volleyError = (VolleyError) error;
 //                System.out.println("--------error----------");
 //            }
 //        });

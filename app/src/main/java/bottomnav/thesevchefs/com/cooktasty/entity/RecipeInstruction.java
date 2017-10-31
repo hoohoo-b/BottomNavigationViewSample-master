@@ -1,5 +1,7 @@
 package bottomnav.thesevchefs.com.cooktasty.entity;
 
+import java.sql.Time;
+
 /**
  * Created by Admin on 31/10/2017.
  */
@@ -7,6 +9,6 @@ package bottomnav.thesevchefs.com.cooktasty.entity;
 public class RecipeInstruction {
     int step_num;
     String instruction;
-    String time_required;
+    Time time_required;
     String image_url;
 }
