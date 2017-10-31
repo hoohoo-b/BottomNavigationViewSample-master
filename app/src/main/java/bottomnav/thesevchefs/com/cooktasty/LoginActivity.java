@@ -25,6 +25,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,6 +37,9 @@ import java.util.concurrent.ExecutionException;
 
 import javax.security.auth.login.LoginException;
 
+import bottomnav.thesevchefs.com.cooktasty.cooktastyapi.APICallback;
+import bottomnav.thesevchefs.com.cooktasty.cooktastyapi.RecipeAPI;
+import bottomnav.thesevchefs.com.cooktasty.entity.Recipe;
 import bottomnav.thesevchefs.com.cooktasty.utilities.NetworkUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,7 +60,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @BindView(R.id.login_progress) View mProgressView;
     @BindView(R.id.login_form) View mLoginFormView;
 
-    @OnEditorAction(R.id.password) boolean onPasswordEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+    @OnEditorAction(R.id.password)
+    public boolean onPasswordEditorAction(TextView textView, int id, KeyEvent keyEvent) {
         if (id == R.id.login || id == EditorInfo.IME_NULL) {
             attemptLogin();
             return true;
@@ -69,7 +75,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     @OnClick(R.id.btn_guest)
-    public void onClickAttemptGuestSsignin(View view) {
+    public void onClickAttemptGuestSignin(View view) {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
     }
@@ -87,6 +93,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
 
         ButterKnife.bind(this);
+
+//  REFERENCE FOR USING cooktastyapi, ALSO CAN USE utilities.NetworkUtils
+//        RecipeAPI.getRecipeListAPI(this, "32ff65c24c42a5efa074ad4e5804f098bc0f8447", new APICallback(){
+//            public void onSuccess(Object result) {
+//                Recipe[] recipelist = (Recipe[]) result;
+//                System.out.println("--------success----------");
+//                System.out.println(recipelist);
+//            }
+//            public void onError(Object error) {
+//                VolleyError volleyError = (VolleyError) error;
+//                System.out.println("--------error----------");
+//            }
+//        });
+
     }
 
 
@@ -101,6 +121,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         if (loginDebugMode) {
+            MyApplication.setAuthToken("32ff65c24c42a5efa074ad4e5804f098bc0f8447");
+            MyApplication.setEmail("admin@example.com");
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         }
