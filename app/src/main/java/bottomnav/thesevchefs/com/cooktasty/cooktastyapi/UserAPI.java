@@ -1,38 +1,46 @@
 package bottomnav.thesevchefs.com.cooktasty.cooktastyapi;
 
 import android.content.Context;
+import android.provider.Settings;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import bottomnav.thesevchefs.com.cooktasty.cooktastyapi.CooktastyAPI;
 import bottomnav.thesevchefs.com.cooktasty.entity.RecipeIngredient;
 
 /**
- * Created by Admin on 31/10/2017.
+ * Created by Admin on 1/11/2017.
  */
 
-public class IngredientAPI extends CooktastyAPI {
+public class UserAPI extends CooktastyAPI {
 
-    public static void getIngredientListAPI(Context context, final APICallback callback) {
+    public static void getAuthTokenAPI(Context context, String email, String password, final APICallback callback) {
 
-        String apiUrl = endPoint + "ingredient/list/";
+        String apiUrl = endPoint + "login2/";
+
+        JSONObject bodyParam = new JSONObject();
+        try {
+            bodyParam.put("email", email);
+            bodyParam.put("password", password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest
-                (Request.Method.GET, apiUrl, null, new Response.Listener<JSONObject>() {
+                (Request.Method.POST, apiUrl, bodyParam, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            String ingredientListJsonString = response.getString("results");
-                            RecipeIngredient.IngredientDetail[] ingredientList = gson.fromJson(ingredientListJsonString, RecipeIngredient.IngredientDetail[].class);
-                            callback.onSuccess(ingredientList);
+                            String authToken = response.getString("token");
+                            callback.onSuccess(authToken);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
