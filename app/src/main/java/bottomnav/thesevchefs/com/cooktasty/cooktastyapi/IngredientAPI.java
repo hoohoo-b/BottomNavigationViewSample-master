@@ -13,10 +13,6 @@ import com.google.gson.GsonBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
-import java.util.List;
-
-import bottomnav.thesevchefs.com.cooktasty.entity.Recipe;
 import bottomnav.thesevchefs.com.cooktasty.entity.RecipeIngredient;
 
 /**

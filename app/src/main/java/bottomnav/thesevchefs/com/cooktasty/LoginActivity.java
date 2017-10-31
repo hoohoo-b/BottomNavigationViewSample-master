@@ -94,6 +94,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         ButterKnife.bind(this);
 
+//  REFERENCE FOR USING cooktastyapi, ALSO CAN USE utilities.NetworkUtils
 //        RecipeAPI.getRecipeListAPI(this, "32ff65c24c42a5efa074ad4e5804f098bc0f8447", new APICallback(){
 //            public void onSuccess(Object result) {
 //                Recipe[] recipelist = (Recipe[]) result;
