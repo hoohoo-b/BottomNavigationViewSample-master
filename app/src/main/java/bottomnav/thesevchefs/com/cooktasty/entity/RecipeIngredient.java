@@ -6,13 +6,13 @@ package bottomnav.thesevchefs.com.cooktasty.entity;
 
 public class RecipeIngredient {
 
-    IngredientDetail ingredient;
-    String serving_size;
+    public IngredientDetail ingredient;
+    public String serving_size;
 
     public class IngredientDetail {
-        long id;
-        String name;
-        String image_url;
+        public long id;
+        public String name;
+        public String image_url;
     }
 
 }
