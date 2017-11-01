@@ -25,6 +25,7 @@ import android.widget.Toast;
 import android.widget.ProgressBar;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,24 +47,42 @@ public class UploadActivity extends AppCompatActivity {
     String[] quantity = {"1", "2", "3", "4", "5"};
     String[] measurement = {"portion", "tbsp", "tsp", "cup", "kg"};
     ArrayList<String> ingredientsList = new ArrayList<String>();
+    ArrayList<String> ingredientsToUpload = new ArrayList<String>();
+    ArrayList<String> ingredientsPortionToUpload = new ArrayList<String>();
 
-    @BindView(R.id.et_recipe_upload_name) EditText mName;
-    @BindView(R.id.et_recipe_upload_description) EditText mDescription;
-    @BindView(R.id.spinner_recipe_duration_hour) Spinner mHours;
-    @BindView(R.id.spinner_recipe_duration_minute) Spinner mMinutes;
-    @BindView(R.id.spinner_recipe_ingredients) Spinner mIngredients;
-    @BindView(R.id.tv_recipe_ingredient_selected) TextView mIngredientSelected;
-    @BindView(R.id.spinner_recipe_quantity) Spinner mQuantity;
-    @BindView(R.id.spinner_recipe_quantity_measurement) Spinner mMeasurement;
-    @BindView(R.id.spinner_recipe_difficulty) Spinner mDifficulty;
-    @BindView(R.id.btnAdd) Button btnAdd;
-    @BindView(R.id.btnSelectIngredient) Button btnSelect;
-    @BindView(R.id.btnRemoveIngredient) Button btnRemove;
-    @BindView(R.id.iv_recipe_upload_image) ImageView mImage;
+    @BindView(R.id.et_recipe_upload_name)
+    EditText mName;
+    @BindView(R.id.et_recipe_upload_description)
+    EditText mDescription;
+    @BindView(R.id.spinner_recipe_duration_hour)
+    Spinner mHours;
+    @BindView(R.id.spinner_recipe_duration_minute)
+    Spinner mMinutes;
+    @BindView(R.id.spinner_recipe_ingredients)
+    Spinner mIngredients;
+    @BindView(R.id.tv_recipe_ingredient_selected)
+    TextView mIngredientSelected;
+    @BindView(R.id.spinner_recipe_quantity)
+    Spinner mQuantity;
+    @BindView(R.id.spinner_recipe_quantity_measurement)
+    Spinner mMeasurement;
+    @BindView(R.id.spinner_recipe_difficulty)
+    Spinner mDifficulty;
+    @BindView(R.id.btnAdd)
+    Button btnAdd;
+    @BindView(R.id.btnSelectIngredient)
+    Button btnSelect;
+    @BindView(R.id.btnRemoveIngredient)
+    Button btnRemove;
+    @BindView(R.id.iv_recipe_upload_image)
+    ImageView mImage;
 
-    @BindView(R.id.ll_recipe_upload_page) LinearLayout mRecipeUploadPage;
-    @BindView(R.id.tv_error_message_display) TextView mErrorMessageDisplay;
-    @BindView(R.id.pb_loading_indicator) ProgressBar mLoadingIndicator;
+    @BindView(R.id.ll_recipe_upload_page)
+    LinearLayout mRecipeUploadPage;
+    @BindView(R.id.tv_error_message_display)
+    TextView mErrorMessageDisplay;
+    @BindView(R.id.pb_loading_indicator)
+    ProgressBar mLoadingIndicator;
 
     Bitmap recipeImage;
     String authToken = "";
@@ -135,7 +154,7 @@ public class UploadActivity extends AppCompatActivity {
             case R.id.action_next:
                 String data = getDataInputsPart1();
                 new UploadRecipe().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/upload/", "POST", data, authToken);
-                 return true;
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -198,6 +217,8 @@ public class UploadActivity extends AppCompatActivity {
         }
 
         if (view == btnSelect) {
+            ingredientsPortionToUpload.add(mQuantity.getSelectedItem().toString() + " " + mMeasurement.getSelectedItem().toString());
+            ingredientsToUpload.add(mIngredients.getSelectedItem().toString());
             String ingredientSelected = mQuantity.getSelectedItem().toString() + " " + mMeasurement.getSelectedItem().toString() + " of " + mIngredients.getSelectedItem().toString();
             if (mIngredientSelected.getText() == null) {
                 mIngredientSelected.setText(ingredientSelected);
@@ -211,8 +232,12 @@ public class UploadActivity extends AppCompatActivity {
                 String existingIngredient = mIngredientSelected.getText().toString();
                 if (existingIngredient.lastIndexOf("\n") > 0) {
                     mIngredientSelected.setText(existingIngredient.substring(0, existingIngredient.lastIndexOf("\n")));
+                    ingredientsToUpload.remove(ingredientsToUpload.size() - 1);
+                    ingredientsPortionToUpload.remove(ingredientsPortionToUpload.size() - 1);
                 } else {
                     mIngredientSelected.setText("");
+                    ingredientsToUpload.remove(0);
+                    ingredientsPortionToUpload.remove(0);
                 }
             }
         }
@@ -246,25 +271,38 @@ public class UploadActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            uploadRecipe(s);
+            uploadRecipeImageAndIngredients(s);
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             showIngredientListDataView();
 
-            // todo: toast not set causing error
-            mToast.setText(s);
-            resultOutput = s;
         }
     }
 
-    private void uploadRecipe(String output) {
+    private void uploadRecipeImageAndIngredients(String output) {
         String recipeId = null;
         try {
             recipeId = JsonReader.getRecipeIdFromResult(output);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        uploadRecipeImage(recipeId);
+        uploadRecipeIngredients(recipeId);
+    }
+    
+    private void uploadRecipeIngredients(String recipeId) {
+        System.out.print(ingredientsPortionToUpload);
+        System.out.print(ingredientsToUpload);
+        if (ingredientsPortionToUpload != null) {
+            for (int i = 0; i < ingredientsPortionToUpload.size(); i++) {
+                new UploadRecipeIngredientAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "http://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/" + recipeId + "/ingredient/add/", ingredientsPortionToUpload.get(i), ingredientsToUpload.get(i), authToken);
+            }
+        }
+    }
+
+    private void uploadRecipeImage(String recipeId) {
         UploadRecipeImageAsyncTask uploadRecipeImageTask = new UploadRecipeImageAsyncTask(imageUri, this.getContentResolver());
-        uploadRecipeImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/image/upload/" + recipeId + "/", "32ff65c24c42a5efa074ad4e5804f098bc0f8447");
+        uploadRecipeImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/image/upload/" + recipeId + "/", authToken);
+
     }
 
 
@@ -358,6 +396,26 @@ public class UploadActivity extends AppCompatActivity {
 
     }
 
+    public class UploadRecipeIngredientAsyncTask extends AsyncTask<String, Void, String> {
 
+        @Override
+        protected String doInBackground(String... params) {
+            String urlString = params[0];
+            String servingSize = params[1];
+            String ingredientName = params[2];
+            String authToken = params[3];
+
+            String json;
+            String output = null;
+
+            try {
+                json = NetworkUtils.setIngredientJson(servingSize, ingredientName);
+                output = NetworkUtils.getResponseFromHttpUrl(urlString, "POST", json, authToken);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return output;
+        }
+
+    }
 }
-

@@ -101,7 +101,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         String ingredientText = "";
         for(RecipeIngredient ri : recipe.ingredients){
-            ingredientText = ingredientText + ri.ingredient.name + " " + ri.serving_size + "\n\r";
+            ingredientText = ingredientText + ri.serving_size + " of " + ri.ingredient.name + " " + "\n\r";
         }
         mRecipeIngredients.setText(ingredientText);
     }
