@@ -6,6 +6,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.app.ProgressDialog;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -40,11 +41,18 @@ import butterknife.OnEditorAction;
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     private Boolean loginDebugMode = false;
+    private static final int REQUEST_SIGNUP = 0;
 
     @BindView(R.id.email) AutoCompleteTextView mEmailView;
     @BindView(R.id.password) EditText mPasswordView;
-    @BindView(R.id.login_progress) View mProgressView;
     @BindView(R.id.login_form) View mLoginFormView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
+    }
 
     @OnEditorAction(R.id.password)
     public boolean onPasswordEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -67,19 +75,24 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     @OnClick(R.id.btn_signup)
-    public void onClickGoSignup(View view) {
-//        todo: GO TO SIGN UP ACTIVITY
-//        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//        startActivity(intent);
+    public void onClickGoSignupActivity(View view) {
+        Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+        startActivityForResult(intent, REQUEST_SIGNUP);
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
-    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_SIGNUP) {
+            if (resultCode == RESULT_OK) {
+                String signupEmail = data.getStringExtra("email");
+                String signupPassword = data.getStringExtra("password");
 
+                mEmailView.setText(signupEmail);
+                mPasswordView.setText(signupPassword);
+                attemptLogin();
+            }
+        }
+    }
 
     private Boolean attemptLogin() {
 
@@ -124,7 +137,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (cancel) {
             focusView.requestFocus();
         } else {
-            showProgress(true);
+
+            final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Authenticating...");
+            progressDialog.show();
+
 
             final String finalEmail = email;
             UserAPI.getAuthTokenAPI(this, email, password,
@@ -132,10 +150,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         @Override
                         public void onSuccess(Object result) {
                             doOnAuthenticationSuccess((String) result, finalEmail);
+                            progressDialog.dismiss();
                         }
                         @Override
                         public void onError(Object result) {
                             doOnAuthenticationFailure();
+                            progressDialog.dismiss();
                         }
                     });
 
@@ -146,7 +166,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     public void doOnAuthenticationSuccess(String authToken, String authEmail) {
-        showProgress(false);
         MyApplication.setAuthToken(authToken);
         MyApplication.setEmail(authEmail);
 
@@ -155,7 +174,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     public void doOnAuthenticationFailure() {
-        showProgress(false);
         mPasswordView.setError(getString(R.string.error_incorrect_password));
     }
 
@@ -167,42 +185,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 4;
-    }
-
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
     }
 
     @Override
