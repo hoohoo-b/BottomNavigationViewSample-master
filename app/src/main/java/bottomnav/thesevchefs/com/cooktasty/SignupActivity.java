@@ -108,8 +108,8 @@ public class SignupActivity extends AppCompatActivity {
             mSignupEmailEditText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            mPasswordEditText.setError("between 4 and 10 alphanumeric characters");
+        if (password.isEmpty() || password.length() < 4 || password.length() > 15) {
+            mPasswordEditText.setError("between 4 and 15 alphanumeric characters");
             valid = false;
         } else {
             mPasswordEditText.setError(null);
