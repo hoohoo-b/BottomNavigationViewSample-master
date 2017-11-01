@@ -55,7 +55,8 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".SignupActivity"></activity>
+        <activity android:name=".SignupActivity" />
+        <activity android:name=".TimelineActivityFragment"></activity>
     </application>
 
 </manifest>

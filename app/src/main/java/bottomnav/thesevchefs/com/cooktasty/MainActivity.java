@@ -46,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, favRecipeFragment).commit();
                 } else if (position == 2) {
                     dispatchTakePictureIntent();
+                } else if (position == 3) {
+                    TimelineActivityFragment timelineActivityFragment = new TimelineActivityFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, timelineActivityFragment).commit();
                 } else if (position == 4) {
                     BlankFragment settingsFragment = new BlankFragment();
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, settingsFragment).commit();

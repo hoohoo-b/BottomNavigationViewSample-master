@@ -28,8 +28,6 @@ import bottomnav.thesevchefs.com.cooktasty.utilities.RecipeListAdapter;
 
 public class RecipeListFragment extends Fragment implements RecipeListAdapter.ListItemClickListener {
 
-    private static final int NUM_LIST_ITEMS = 100;
-
     private Context appContext;
     private String authToken;
 

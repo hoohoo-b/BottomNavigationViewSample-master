@@ -126,4 +126,10 @@
     <string name="select">Select</string>
     <string name="remove">Remove</string>
     <string name="next">Next</string>
+
+    <!-- Strings related to activity_timeline_page -->
+    <string name="timeline">Timeline</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="chefs">Chefs</string>
+
 </resources>
