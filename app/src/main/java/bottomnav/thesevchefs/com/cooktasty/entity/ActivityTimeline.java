@@ -34,7 +34,7 @@ public class ActivityTimeline implements Parcelable {
         main_object_image_url = in.readString();
         target_object_image_url = in.readString();
         formatted_summary_text = in.readString();
-        ParcelableHelper.readDate(in);
+        datetime = ParcelableHelper.readDate(in);
     }
 
     @Override
