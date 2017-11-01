@@ -7,6 +7,9 @@ package bottomnav.thesevchefs.com.cooktasty.utilities;
 import android.content.ContentResolver;
 import android.net.Uri;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -22,6 +25,13 @@ import javax.security.auth.login.LoginException;
  * These utilities will be used to communicate with the network.
  */
 public class NetworkUtils {
+
+    public static String setIngredientJson(String servingSize, String ingredientName) throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put("serving_size", servingSize);
+        json.put("ingredient_name", ingredientName);
+        return json.toString();
+    }
 
     public static String getResponseFromHttpUrl(String urlstring, String requestMethod, String tokenValue) throws IOException {
 
