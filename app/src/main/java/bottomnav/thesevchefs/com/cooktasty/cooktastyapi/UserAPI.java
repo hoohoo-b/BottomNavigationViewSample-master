@@ -56,4 +56,38 @@ public class UserAPI extends CooktastyAPI {
 
     }
 
+    public static void userSignUpAPI(Context context, String email, String password, String username, final APICallback callback) {
+
+        String apiUrl = endPoint + "user/signup/";
+        JSONObject bodyParam = new JSONObject();
+        try {
+            bodyParam.put("email", email);
+            bodyParam.put("password", password);
+            bodyParam.put("username", username);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonRequest = new JsonObjectRequest
+                (Request.Method.POST, apiUrl, bodyParam, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Boolean success = response.getBoolean("success");
+                            callback.onSuccess(success);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        callback.onError(error);
+                    }
+                });
+
+        Volley.newRequestQueue(context).add(jsonRequest);
+
+    }
+
 }
