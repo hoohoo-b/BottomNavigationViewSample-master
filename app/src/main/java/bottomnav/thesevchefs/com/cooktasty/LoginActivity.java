@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -25,17 +24,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
-import javax.security.auth.login.LoginException;
-
-import bottomnav.thesevchefs.com.cooktasty.utilities.NetworkUtils;
+import bottomnav.thesevchefs.com.cooktasty.cooktastyapi.APICallback;
+import bottomnav.thesevchefs.com.cooktasty.cooktastyapi.UserAPI;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -46,9 +39,7 @@ import butterknife.OnEditorAction;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    private UserLoginTask mAuthTask = null;
     private Boolean loginDebugMode = false;
-    private String authToken = null;
 
     @BindView(R.id.email) AutoCompleteTextView mEmailView;
     @BindView(R.id.password) EditText mPasswordView;
@@ -87,20 +78,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
-//        todo: use below for login
-//        UserAPI.getAuthTokenAPI(this, "admin@example.com", "qwe123qwe123",
-//                new APICallback() {
-//                    @Override
-//                    public void onSuccess(Object result) {
-//                        System.out.println((String) result);
-//                    }
-//                    @Override
-//                    public void onError(Object result) {
-//                        System.out.println("-------error--------");
-//                    }
-//                });
-
     }
 
 
@@ -110,17 +87,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
-        if (mAuthTask != null) {
-            return false;
-        }
-
         if (loginDebugMode) {
             MyApplication.setAuthToken("32ff65c24c42a5efa074ad4e5804f098bc0f8447");
             MyApplication.setEmail("admin@example.com");
+
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
-        }
 
+            return true;
+        }
 
         // Reset errors.
         mEmailView.setError(null);
@@ -135,52 +110,53 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             focusView = mPasswordView;
             cancel = true;
         }
-
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
+        }else if (!isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
         }
 
-        String tokenJson = "";
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
 
-            try {
-                tokenJson = mAuthTask.execute((Void) null).get();
-                JSONObject tokenJsonObj = new JSONObject(tokenJson);
-                authToken = tokenJsonObj.getString("token");
-
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            MyApplication.setAuthToken(authToken);
-            MyApplication.setEmail(email);
+            final String finalEmail = email;
+            UserAPI.getAuthTokenAPI(this, email, password,
+                    new APICallback() {
+                        @Override
+                        public void onSuccess(Object result) {
+                            doOnAuthenticationSuccess((String) result, finalEmail);
+                        }
+                        @Override
+                        public void onError(Object result) {
+                            doOnAuthenticationFailure();
+                        }
+                    });
 
         }
 
         return true;
 
+    }
+
+    public void doOnAuthenticationSuccess(String authToken, String authEmail) {
+        showProgress(false);
+        MyApplication.setAuthToken(authToken);
+        MyApplication.setEmail(authEmail);
+
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void doOnAuthenticationFailure() {
+        showProgress(false);
+        mPasswordView.setError(getString(R.string.error_incorrect_password));
     }
 
     private boolean isEmailValid(String email) {
@@ -283,57 +259,5 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int IS_PRIMARY = 1;
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, String> {
-
-        private final String mEmail;
-        private final String mPassword;
-        private final String mServerURL = "https://hidden-springs-80932.herokuapp.com/";
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-
-            String authJson = "{\"email\": \"" + mEmail + "\", \"password\": \"" + mPassword + "\"}";
-
-            String tokenString = "";
-            try {
-                tokenString = NetworkUtils.getAuthToken(authJson);
-            } catch (LoginException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return tokenString;
-        }
-
-        @Override
-        protected void onPostExecute(String tokenString) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (tokenString != "") {
-                authToken = tokenString;
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
-    }
 }
 
