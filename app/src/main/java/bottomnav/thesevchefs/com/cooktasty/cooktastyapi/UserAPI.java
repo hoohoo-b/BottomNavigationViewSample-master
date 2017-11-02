@@ -98,9 +98,9 @@ public class UserAPI extends CooktastyAPI {
 
     }
 
-    public static void userActivityTimeLineAPI(Context context, final String authToken, final APICallback callback) {
+    public static void userActivityTimeLineAPI(Context context, final String authToken, final int page, final APICallback callback) {
 
-        String apiUrl = endPoint + "this/user/timeline/";
+        String apiUrl = endPoint + "this/user/timeline/?page=" + page;
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest
                 (Request.Method.GET, apiUrl, null, new Response.Listener<JSONObject>() {

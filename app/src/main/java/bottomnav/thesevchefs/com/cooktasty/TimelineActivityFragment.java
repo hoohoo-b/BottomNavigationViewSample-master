@@ -12,7 +12,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
+import com.android.volley.VolleyError;
+
+import java.util.List;
+
+import bottomnav.thesevchefs.com.cooktasty.cooktastyapi.APICallback;
+import bottomnav.thesevchefs.com.cooktasty.cooktastyapi.UserAPI;
+import bottomnav.thesevchefs.com.cooktasty.entity.ActivityTimeline;
+import bottomnav.thesevchefs.com.cooktasty.utilities.EndlessScrollListener;
+import bottomnav.thesevchefs.com.cooktasty.utilities.TimelineListAdapter;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -20,6 +32,9 @@ public class TimelineActivityFragment extends Fragment {
 
     private Context appContext;
     private String authToken;
+    private TimelineListAdapter mTimelineListAdapter;
+
+    @BindView(R.id.lv_timelinelist) ListView mListView;
 
     private Unbinder unbinder;
     private android.support.v7.app.ActionBar mActionBar;
@@ -58,8 +73,38 @@ public class TimelineActivityFragment extends Fragment {
 
         appContext = getActivity().getApplicationContext();
         authToken = MyApplication.getAuthToken();
+        if (authToken == null) { authToken = ""; }
+
+        mTimelineListAdapter = new TimelineListAdapter(appContext);
+        EndlessScrollListener scrollListener = new EndlessScrollListener(){
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                loadTimelinesToListView(appContext, authToken, page, mTimelineListAdapter);
+                return true;
+            }
+        };
+
+        loadTimelinesToListView(appContext, authToken, 1, mTimelineListAdapter);
+        mListView.setAdapter(mTimelineListAdapter);
+        mListView.setOnScrollListener(scrollListener);
 
         return rootView;
+    }
+
+    public void loadTimelinesToListView(Context ctxt, String token, int page, final TimelineListAdapter timelineListAdapter){
+        UserAPI.userActivityTimeLineAPI(ctxt, token, page, new APICallback(){
+            @Override
+            public void onSuccess(Object result) {
+                List<ActivityTimeline> timelines = (List<ActivityTimeline>) result;
+                System.out.println(timelines.size() + "------------");
+                timelineListAdapter.addActivityTimelineListData(timelines);
+            }
+            @Override
+            public void onError(Object error) {
+                VolleyError volleyError = (VolleyError) error;
+                volleyError.printStackTrace();
+            }
+        });
     }
 
     @Override
