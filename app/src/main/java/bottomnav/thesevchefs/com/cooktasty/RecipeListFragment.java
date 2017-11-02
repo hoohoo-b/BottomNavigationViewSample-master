@@ -28,14 +28,12 @@ import bottomnav.thesevchefs.com.cooktasty.utilities.RecipeListAdapter;
 
 public class RecipeListFragment extends Fragment implements RecipeListAdapter.ListItemClickListener {
 
-    private static final int NUM_LIST_ITEMS = 100;
-
     private Context appContext;
     private String authToken;
 
     private RecipeListAdapter mRecipeListAdapter;
 
-    @BindView(R.id.rv_favrecipelist) RecyclerView mRecyclerView;
+    @BindView(R.id.rv_recipelist) RecyclerView mRecyclerView;
     @BindView(R.id.pb_loading_indicator) ProgressBar mLoadingIndicator;
     @BindView(R.id.tv_error_message_display) TextView mErrorMessageDisplay;
     private Unbinder unbinder;

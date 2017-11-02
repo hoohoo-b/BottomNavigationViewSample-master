@@ -3,6 +3,7 @@ package bottomnav.thesevchefs.com.cooktasty.cooktastyapi;
 import android.content.Context;
 import android.provider.Settings;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -13,7 +14,14 @@ import com.google.gson.JsonObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import bottomnav.thesevchefs.com.cooktasty.cooktastyapi.CooktastyAPI;
+import bottomnav.thesevchefs.com.cooktasty.entity.ActivityTimeline;
+import bottomnav.thesevchefs.com.cooktasty.entity.Recipe;
 import bottomnav.thesevchefs.com.cooktasty.entity.RecipeIngredient;
 
 /**
@@ -85,6 +93,44 @@ public class UserAPI extends CooktastyAPI {
                         callback.onError(error);
                     }
                 });
+
+        Volley.newRequestQueue(context).add(jsonRequest);
+
+    }
+
+    public static void userActivityTimeLineAPI(Context context, final String authToken, final int page, final APICallback callback) {
+
+        String apiUrl = endPoint + "this/user/timeline/?page=" + page;
+
+        JsonObjectRequest jsonRequest = new JsonObjectRequest
+                (Request.Method.GET, apiUrl, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String timelinesJsonString = response.getString("results");
+                            List<ActivityTimeline> activityTimelines = Arrays.asList(gson.fromJson(timelinesJsonString, ActivityTimeline[].class));
+                            callback.onSuccess(activityTimelines);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        callback.onError(error);
+                    }
+                }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                if(authToken == null || authToken == "") return super.getHeaders();
+
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", "Token " + authToken);
+                return params;
+            }
+
+        };
 
         Volley.newRequestQueue(context).add(jsonRequest);
 

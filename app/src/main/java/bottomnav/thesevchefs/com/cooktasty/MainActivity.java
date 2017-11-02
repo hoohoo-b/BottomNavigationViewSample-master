@@ -3,8 +3,10 @@ package bottomnav.thesevchefs.com.cooktasty;
 // FOR MAIN PAGE AFTER LOGIN
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -38,17 +40,21 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
+
                 if (position == 0) {
                     RecipeListFragment recipeFragment = new RecipeListFragment();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, recipeFragment).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment).commit();
                 } else if (position == 1) {
                     FavRecipeFragment favRecipeFragment = new FavRecipeFragment();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, favRecipeFragment).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, favRecipeFragment).commit();
                 } else if (position == 2) {
                     dispatchTakePictureIntent();
+                } else if (position == 3) {
+                    TimelineActivityFragment timelineActivityFragment = new TimelineActivityFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, timelineActivityFragment).commit();
                 } else if (position == 4) {
                     BlankFragment settingsFragment = new BlankFragment();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, settingsFragment).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, settingsFragment).commit();
                 }
 
                 return true;
@@ -64,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        load default fragment
         RecipeListFragment recipeFragment = new RecipeListFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentp, recipeFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment).commit();
 
     }
 

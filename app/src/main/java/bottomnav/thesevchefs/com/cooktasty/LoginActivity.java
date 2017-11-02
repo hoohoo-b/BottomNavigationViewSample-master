@@ -40,7 +40,7 @@ import butterknife.OnEditorAction;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    private Boolean loginDebugMode = false;
+    private Boolean loginDebugMode = true;
     private static final int REQUEST_SIGNUP = 0;
 
     @BindView(R.id.email) AutoCompleteTextView mEmailView;

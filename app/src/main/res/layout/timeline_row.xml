@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <ImageView
+            android:id="@+id/main_object_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/ic_userprofile_placeholder" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/target_object_image"
+            android:layout_toRightOf="@+id/main_object_image"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/timeline_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:text="iwantcook followed you on CookTasty"
+                android:textAppearance="@android:style/TextAppearance.Holo" />
+
+            <TextView
+                android:id="@+id/timeline_datetime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:text="October 11 at 11:35am"
+                android:textSize="12sp"
+                android:typeface="sans" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/target_object_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_recipe_placeholder" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

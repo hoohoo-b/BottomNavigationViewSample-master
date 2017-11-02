@@ -1,6 +1,7 @@
 package bottomnav.thesevchefs.com.cooktasty;
 
 import android.os.Parcel;
+import android.provider.Settings;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Test;
@@ -9,6 +10,7 @@ import org.junit.runner.RunWith;
 import java.sql.Time;
 import java.util.Date;
 
+import bottomnav.thesevchefs.com.cooktasty.entity.ActivityTimeline;
 import bottomnav.thesevchefs.com.cooktasty.entity.Recipe;
 import bottomnav.thesevchefs.com.cooktasty.entity.RecipeIngredient;
 import bottomnav.thesevchefs.com.cooktasty.entity.RecipeInstruction;
@@ -116,5 +118,36 @@ public class ParcelableEntityTest {
 
     }
 
+    @Test
+    public void test_activity_timeline_is_parcelable() {
+
+        long user = 1;
+        long target_user = 2;
+        String main_object_image_url = "image/test.jpg";
+        String target_object_image_url = "target/test.jpg";
+        String formatted_summary_text = "You uploaded image";
+        Date datetime = new Date(100);
+
+        ActivityTimeline timeline = new ActivityTimeline(user, target_user, main_object_image_url, target_object_image_url, formatted_summary_text, datetime);
+
+        assertThat(timeline.datetime, is(datetime));
+
+        Parcel timelineParcel = Parcel.obtain();
+        timeline.writeToParcel(timelineParcel, timeline.describeContents());
+        timelineParcel.setDataPosition(0);
+
+        ActivityTimeline createdFromParcel = ActivityTimeline.CREATOR.createFromParcel(timelineParcel);
+
+        assertThat(createdFromParcel.user, is(user));
+        assertThat(createdFromParcel.target_user, is(target_user));
+        assertThat(createdFromParcel.main_object_image_url, is(main_object_image_url));
+        assertThat(createdFromParcel.target_object_image_url, is(target_object_image_url));
+        assertThat(createdFromParcel.formatted_summary_text, is(formatted_summary_text));
+
+        System.out.println(createdFromParcel.datetime);
+
+        assertThat(createdFromParcel.datetime, is(datetime));
+
+    }
 
 }
