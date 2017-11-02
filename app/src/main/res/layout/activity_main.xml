@@ -9,13 +9,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/white">
 
-    <fragment
-        android:id="@+id/fragmentp"
-        android:name="bottomnav.thesevchefs.com.cooktasty.RecipeListFragment"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="50dp" />
+        android:layout_marginBottom="50dp">
+
+    </FrameLayout>
 
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
         android:id="@+id/bottom_navigation"
