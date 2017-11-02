@@ -18,7 +18,6 @@ import butterknife.Unbinder;
 
 public class BlankFragment extends Fragment {
 
-    @BindView(R.id.btn_settings) Button btn_settings;
     @BindView(R.id.btn_logout) Button btn_logout;
     private Unbinder unbinder;
 
@@ -46,11 +45,6 @@ public class BlankFragment extends Fragment {
         MyApplication.setAuthToken(null);
         MyApplication.setEmail(null);
         startActivity(new Intent(getActivity(), LoginActivity.class));
-    }
-
-    @OnClick(R.id.btn_settings)
-    public void onClickSettingButton(View view) {
-        startActivity(new Intent(getActivity(), SettingsActivity.class));
     }
 
     @Override

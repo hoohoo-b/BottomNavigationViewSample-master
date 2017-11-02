@@ -23,6 +23,11 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
+    <string-array name="settings_options">
+        <item>Settings</item>
+        <item>Privacy</item>
+        <item>Help and Support</item>
+    </string-array>
 
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
