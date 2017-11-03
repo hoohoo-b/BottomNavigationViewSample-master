@@ -32,6 +32,42 @@ import static android.R.attr.key;
 
 public class RecipeAPI extends CooktastyAPI {
 
+    public static void getRecommendedRecipeAPI(Context context, final String authToken, final APICallback callback) {
+
+        String apiUrl = endPoint + "recipe/recommend/";
+
+        JsonObjectRequest jsonRequest = new JsonObjectRequest
+                (Request.Method.GET, apiUrl, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String recommendedRecipeJsonString = response.getString("data");
+                            Recipe recipe = gson.fromJson(recommendedRecipeJsonString, Recipe.class);
+                            callback.onSuccess(recipe);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        callback.onError(error);
+                    }
+                }){
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                if(authToken == null || authToken == "") return super.getHeaders();
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", "Token " + authToken);
+                return params;
+            }
+
+        };
+
+        Volley.newRequestQueue(context).add(jsonRequest);
+    }
+
     public static void getRecipeDetailAPI(Context context, final String authToken, long recipeId, final APICallback callback) {
 
         String apiUrl = endPoint + "recipe/" + recipeId + "/";
