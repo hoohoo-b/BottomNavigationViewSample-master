@@ -100,7 +100,7 @@ public class RecipeStepDetailFragment extends Fragment {
             // Setup default view
             defaultMediaImageView.setVisibility(View.VISIBLE);
             Picasso
-                    .with(getContext())
+                    .with(getActivity())
                     .load(step.image_url)
                     .into(defaultMediaImageView);
         }
@@ -108,23 +108,22 @@ public class RecipeStepDetailFragment extends Fragment {
         recipeStepDescriptionTextView.setText(step.instruction);
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     private void setupThumbnail(RecipeInstruction step) {
-        Uri uri = Uri.parse(step.image_url);
-        String url = uri.toString();
+        String url = step.image_url;
+        Uri uri = Uri.parse(url);
         String extension = "";
 
-        int i = url.lastIndexOf('.');
-        if (i > 0) {
-            extension = url.substring(i + 1);
-        }
-
-        if (extension != "jpg" || extension != "png") {
-            return;
-        }
+//        int i = url.lastIndexOf('.');
+//        if (i > 0) {
+//            extension = url.substring(i + 1);
+//        }
+//
+//        if (extension != "jpg" || extension != "png") {
+//            return;
+//        }
 
         Picasso
-            .with(getContext())
+            .with(getActivity())
             .load(uri)
             .into(defaultMediaImageView);
     }

@@ -72,20 +72,16 @@ public class RecipeStepRecyclerViewAdapter extends RecyclerView.Adapter<RecipeSt
             this.position = position;
 
             // Position 0 is recipe introduction
-            if (position == 0){
-                recipeStepShortDescriptionTextView.setText(step.instruction);
-            } else {
-                recipeStepShortDescriptionTextView.setText(String.format(
+            recipeStepShortDescriptionTextView.setText(String.format(
                     "%s. %s",
-                    position,
+                    position + 1,
                     step.instruction
-                ));
-            }
+            ));
+
         }
 
         @Override
         public void onClick(View view) {
-            onClickHandler.onRecipeStepClicked(position, step);
         }
     }
 }

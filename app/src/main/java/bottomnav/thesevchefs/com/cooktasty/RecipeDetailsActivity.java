@@ -37,7 +37,7 @@ import bottomnav.thesevchefs.com.cooktasty.entity.RecipeIngredient;
  * Created by Allets on 19/10/2017.
  */
 
-public class RecipeDetailsActivity extends AppCompatActivity implements RecipeStepRecyclerViewAdapter.OnClickHandler {
+public class RecipeDetailsActivity extends AppCompatActivity {
 
     Recipe thisActivityRecipe;
     RecipeInstruction[] thisActivityRecipeInstructions;
@@ -138,7 +138,6 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
         // Setup recipe step list fragment
         steps = new ArrayList<RecipeInstruction>(Arrays.asList(recipe.instructions));
         RecipeStepListFragment recipeStepListFragment = new RecipeStepListFragment();
-        recipeStepListFragment.setOnRecipeStepClickHandler(this);
 
         getFragmentManager()
                 .beginTransaction()
@@ -208,18 +207,5 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
                 .beginTransaction()
                 .replace(R.id.recipeStepDetailFragmentContainer, recipeStepDetailFragment)
                 .commit();
-    }
-
-    @Override
-    public void onRecipeStepClicked(int position, RecipeInstruction step) {
-        if (recipeStepDetailFragment != null) {
-            setupRecipeStepDetailFragment(step);
-        } else {
-            Intent intent = new Intent(this, RecipeStepDetailActivity.class);
-            intent.putParcelableArrayListExtra("recipe_instructions", steps);
-            intent.putExtra(Intent.EXTRA_INDEX, position);
-
-            startActivity(intent);
-        }
     }
 }
