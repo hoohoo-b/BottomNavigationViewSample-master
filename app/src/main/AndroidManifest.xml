@@ -56,7 +56,9 @@
         </provider>
 
         <activity android:name=".SignupActivity" />
-        <activity android:name=".TimelineActivityFragment"></activity>
+        <activity android:name=".step.RecipeStepDetailActivity"
+            android:parentActivityName=".RecipeDetailsActivity" />
+
     </application>
 
 </manifest>

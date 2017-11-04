@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/recipeStepScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+                <FrameLayout
+                    android:id="@+id/recipeStepDetailFragmentContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/toPreviousRecipeStepButton"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="Previous Step"
+                    app:layout_constraintTop_toBottomOf="@id/recipeStepDetailFragmentContainer"
+                    app:layout_constraintLeft_toLeftOf="parent"/>
+
+                <Button
+                    android:id="@+id/toNextRecipeStepButton"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="Next Step"
+                    app:layout_constraintTop_toBottomOf="@id/recipeStepDetailFragmentContainer"
+                    app:layout_constraintRight_toRightOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+</ScrollView>
