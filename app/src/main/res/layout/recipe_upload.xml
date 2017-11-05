@@ -53,44 +53,6 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/recipe_description" />
 
-            <TextView
-                android:id="@+id/tv_recipe_upload_duration_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:text="@string/recipe_duration"
-                android:textSize="20dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Spinner
-                    android:id="@+id/spinner_recipe_duration_hour"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/hour" />
-
-                <Spinner
-                    android:id="@+id/spinner_recipe_duration_minute"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/minute" />
-
-            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_recipe_upload_difficulty_title"

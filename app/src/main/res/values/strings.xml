@@ -6,17 +6,6 @@
     <string name="text_activity">Activity</string>
     <string name="text_me">Me</string>
 
-    <string-array name="Planets">
-        <item>Sun</item>
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
-    </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -124,10 +113,10 @@
     <string name="recipe_upload_name">Recipe Name</string>
     <string name="hour">h</string>
     <string name="minute">min</string>
+    <string name="second">s</string>
     <string name="hintTxtItem">Enter an item here ...</string>
     <string name="lblBtnAdd">Add Ingredient</string>
     <string name="recipe_duration">Recipe Duration</string>
-    <string name="recipe_difficulty">Recipe Difficulty</string>
     <string name="select">Select</string>
     <string name="remove">Remove</string>
     <string name="next">Next</string>
@@ -136,5 +125,15 @@
     <string name="timeline">Timeline</string>
     <string name="dashboard">Dashboard</string>
     <string name="chefs">Chefs</string>
+    <string name="recipe_instruction_image">Recipe Instruction Image</string>
+    <string name="time_required">Time Required</string>
+    <string name="recipe_name">Recipe Name</string>
+    <string name="recipe_time">recipe time</string>
+    <string name="recipe_difficulty">Recipe Difficulty</string>
+    <string name="recipe_instruction">Recipe Instruction</string>
+    <string name="previous_step">Previous Step</string>
+    <string name="next_step">Next Step</string>
+    <string name="done">Done</string>
+    <string name="main_menu">Main Menu</string>
 
 </resources>

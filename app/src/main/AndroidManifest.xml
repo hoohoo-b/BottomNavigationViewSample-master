@@ -58,6 +58,8 @@
         <activity android:name=".SignupActivity" />
         <activity android:name=".step.RecipeStepDetailActivity"
             android:parentActivityName=".RecipeDetailsActivity" />
+        <activity android:name=".UploadRecipeInstructions"
+            android:parentActivityName=".UploadActivity" />
 
     </application>
 

@@ -14,6 +14,11 @@ public class JsonReader {
     private static String recipeName;
     private static String recipeDescription;
     private static int recipeDifficulty;
+    private static int recipeId;
+    private static int stepNum;
+    private static String instructionDetails;
+    private static int minute;
+    private static int hour;
 
 
     public static void setRecipeName(String name) {
@@ -137,5 +142,47 @@ public class JsonReader {
         return Integer.toString(recipeId);
     }
 
+    public static String getRecipeInstructionIdFromResult(String result) throws JSONException{
+        JSONObject resultOutput = new JSONObject(result);
+        int recipeInstructionId = resultOutput.getInt("instruction_id");
+        return Integer.toString(recipeInstructionId);
+    }
 
+    public static String getFormattedInstruction(){
+        String instruction;
+        JSONObject json = new JSONObject();
+
+        try {
+            json.put("recipe_id", recipeId);
+            json.put("step_num", stepNum);
+            json.put("instruction", instructionDetails);
+            json.put("duration_minute", minute);
+            json.put("duration_hour", hour);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        instruction = json.toString();
+        return instruction;
+    }
+
+
+    public static void setHour(int hour) {
+        JsonReader.hour = hour;
+    }
+
+    public static void setMinute(int minute) {
+        JsonReader.minute = minute;
+    }
+
+    public static void setInstructionDetails(String instructionDetails) {
+        JsonReader.instructionDetails = instructionDetails;
+    }
+
+    public static void setStepNum(int stepNum) {
+        JsonReader.stepNum = stepNum;
+    }
+
+    public static void setRecipeId(int recipeId) {
+        JsonReader.recipeId = recipeId;
+    }
 }
