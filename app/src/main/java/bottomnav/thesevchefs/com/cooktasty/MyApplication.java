@@ -1,6 +1,7 @@
 package bottomnav.thesevchefs.com.cooktasty;
 
 import android.app.Application;
+import android.content.Context;
 
 /**
  * Created by Allets on 20/10/2017.
