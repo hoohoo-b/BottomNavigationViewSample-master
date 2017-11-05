@@ -12,6 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.*;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -20,7 +22,9 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import com.android.volley.VolleyError;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import bottomnav.thesevchefs.com.cooktasty.cooktastyapi.APICallback;
@@ -45,6 +49,13 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Li
     ProgressBar mLoadingIndicator;
     @BindView(R.id.tv_error_message_display)
     TextView mErrorMessageDisplay;
+    @BindView(R.id.iv_recommended_recipe_image)
+    ImageView mRecommendedImage;
+    @BindView(R.id.tv_recommended_recipe_name)
+    TextView mRecommendedName;
+
+    private Recipe recommendedRecipe;
+
     private Unbinder unbinder;
 
     public static RecipeListFragment newInstance() {
@@ -92,6 +103,27 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Li
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         showRecipeListDataView();
+        showRecommendedRecipe();
+    }
+
+    private void showRecommendedRecipe() {
+        RecipeAPI.getRecommendedRecipeAPI(getContext(), "", new APICallback() {
+
+            @Override
+            public void onSuccess(Object result) {
+                recommendedRecipe = (Recipe) result;
+                Picasso.with(getActivity())
+                        .load(recommendedRecipe.image_url)
+                        .into(mRecommendedImage);
+                mRecommendedName.setText(recommendedRecipe.name);
+            }
+
+            @Override
+            public void onError(Object result) {
+                VolleyError volleyError = (VolleyError) result;
+                volleyError.printStackTrace();
+            }
+        });
     }
 
     public void loadRecipeListToRecyclerView(Context ctxt, String token, int getPage, final RecipeListAdapter mRecipeListAdapter) {
@@ -191,4 +223,9 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Li
     }
 
     ;
+
+    public long getRecommendedRecipeId(){
+        return recommendedRecipe.id;
+    }
 }
+

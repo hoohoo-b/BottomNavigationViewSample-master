@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_TAKE_PHOTO = 1;
     String authToken = "";
     Context mContext;
+    RecipeListFragment recipeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 //        load default fragment
-        RecipeListFragment recipeFragment = new RecipeListFragment();
+        recipeFragment = new RecipeListFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment).commit();
 
     }
@@ -97,5 +99,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void clickNew(View view) {
+        long recipeId = recipeFragment.getRecommendedRecipeId();
+        Intent intentToStartRecipeDetailActivity = new Intent(this, RecipeDetailsActivity.class);
+        intentToStartRecipeDetailActivity.putExtra("RecipeId", recipeId);
+        startActivity(intentToStartRecipeDetailActivity);
 
+    }
 }
