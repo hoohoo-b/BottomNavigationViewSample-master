@@ -54,4 +54,5 @@ public class RecipeInstruction implements Parcelable{
         ParcelableHelper.writeTime(dest, time_required);
         dest.writeString(image_url);
     }
+
 }
