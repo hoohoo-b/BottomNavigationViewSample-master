@@ -83,7 +83,7 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Li
     }
 
     public void loadRecipeListToRecyclerView(Context ctxt, String token, int getPage, final RecipeListAdapter mRecipeListAdapter){
-        RecipeAPI.getRecipeListAPI(ctxt, token, getPage, new APICallback(){
+        RecipeAPI.getRecipeListAPI(ctxt, token, getPage, "", new APICallback(){
             public void onSuccess(Object result) {
                 List<Recipe> recipelist = (List<Recipe>) result;
                 mRecipeListAdapter.addRecipeListData(recipelist);

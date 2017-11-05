@@ -1,6 +1,7 @@
 package bottomnav.thesevchefs.com.cooktasty.cooktastyapi;
 
 import android.content.Context;
+import android.net.Uri;
 import android.provider.Settings;
 
 import com.android.volley.AuthFailureError;
@@ -105,9 +106,14 @@ public class RecipeAPI extends CooktastyAPI {
 
     }
 
-    public static void getRecipeListAPI(Context context, final String authToken, int pageNumber, final APICallback callback) {
+    public static void getRecipeListAPI(Context context, final String authToken, int pageNumber, String search, final APICallback callback) {
 
-        String apiUrl = endPoint + "recipe/list/?page=" + pageNumber;
+        Uri apiUri = Uri.parse(endPoint + "recipe/list/").buildUpon()
+                .appendQueryParameter("page", Integer.toString(pageNumber))
+                .appendQueryParameter("q", search)
+                .build();
+
+        String apiUrl = apiUri.toString();
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest
                 (Request.Method.GET, apiUrl, null, new Response.Listener<JSONObject>() {
