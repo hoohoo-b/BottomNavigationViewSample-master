@@ -165,7 +165,6 @@ public class RecipeStepDetailFragment extends Fragment {
 
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.v("Log_tag", "Tick of Progress" + i + " " + millisUntilFinished);
                 i++;
                 mProgressBar.setProgress((int) i * 100 / (time / 1000));
                 mTimeRemaining.setText(String.format("%d h %d min %d s",

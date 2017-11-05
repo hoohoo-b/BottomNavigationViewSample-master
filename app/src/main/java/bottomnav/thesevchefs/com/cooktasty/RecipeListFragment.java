@@ -1,11 +1,16 @@
 package bottomnav.thesevchefs.com.cooktasty;
 
+import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.*;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,6 +29,7 @@ import bottomnav.thesevchefs.com.cooktasty.entity.Recipe;
 import bottomnav.thesevchefs.com.cooktasty.utilities.EndlessRecyclerViewScrollListener;
 import bottomnav.thesevchefs.com.cooktasty.utilities.RecipeListAdapter;
 
+import static bottomnav.thesevchefs.com.cooktasty.cooktastyapi.RecipeAPI.getRecipeListAPI;
 
 
 public class RecipeListFragment extends Fragment implements RecipeListAdapter.ListItemClickListener {
@@ -33,9 +39,12 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Li
 
     private RecipeListAdapter mRecipeListAdapter;
 
-    @BindView(R.id.rv_recipelist) RecyclerView mRecyclerView;
-    @BindView(R.id.pb_loading_indicator) ProgressBar mLoadingIndicator;
-    @BindView(R.id.tv_error_message_display) TextView mErrorMessageDisplay;
+    @BindView(R.id.rv_recipelist)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.pb_loading_indicator)
+    ProgressBar mLoadingIndicator;
+    @BindView(R.id.tv_error_message_display)
+    TextView mErrorMessageDisplay;
     private Unbinder unbinder;
 
     public static RecipeListFragment newInstance() {
@@ -46,6 +55,7 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Li
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        super.setHasOptionsMenu(true);
     }
 
     @Override
@@ -56,7 +66,9 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Li
 
         appContext = getActivity().getApplicationContext();
         authToken = MyApplication.getAuthToken();
-        if (authToken == null) { authToken = ""; }
+        if (authToken == null) {
+            authToken = "";
+        }
 
         mRecipeListAdapter = new RecipeListAdapter(appContext, this);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -77,17 +89,18 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Li
         return rootView;
     }
 
-    public void onActivityCreated(Bundle savedInstanceState){
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         showRecipeListDataView();
     }
 
-    public void loadRecipeListToRecyclerView(Context ctxt, String token, int getPage, final RecipeListAdapter mRecipeListAdapter){
-        RecipeAPI.getRecipeListAPI(ctxt, token, getPage, "", new APICallback(){
+    public void loadRecipeListToRecyclerView(Context ctxt, String token, int getPage, final RecipeListAdapter mRecipeListAdapter) {
+        RecipeAPI.getRecipeListAPI(ctxt, token, getPage, "", new APICallback() {
             public void onSuccess(Object result) {
                 List<Recipe> recipelist = (List<Recipe>) result;
                 mRecipeListAdapter.addRecipeListData(recipelist);
             }
+
             public void onError(Object error) {
                 VolleyError volleyError = (VolleyError) error;
                 volleyError.printStackTrace();
@@ -119,4 +132,63 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Li
         unbinder.unbind();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.main_menu, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        SearchView searchView = new SearchView(((MainActivity) getActivity()).getSupportActionBar().getThemedContext());
+        MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
+        MenuItemCompat.setActionView(item, searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                getRecipeListAPI(getActivity(), authToken, 1, query, new APICallback() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        mRecipeListAdapter.clearList();
+                        List<Recipe> recipeList = (List<Recipe>) result;
+                        mRecipeListAdapter.addRecipeListData(recipeList);
+                    }
+
+                    @Override
+                    public void onError(Object result) {
+                        VolleyError volleyError = (VolleyError) result;
+                        volleyError.printStackTrace();
+                    }
+                });
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (TextUtils.isEmpty(newText)) {
+                    return false;
+                } else {
+                    getRecipeListAPI(getActivity(), authToken, 1, newText, new APICallback() {
+                        @Override
+                        public void onSuccess(Object result) {
+                            mRecipeListAdapter.clearList();
+                            List<Recipe> recipeList = (List<Recipe>) result;
+                            mRecipeListAdapter.addRecipeListData(recipeList);
+                        }
+
+                        @Override
+                        public void onError(Object result) {
+                            VolleyError volleyError = (VolleyError) result;
+                            volleyError.printStackTrace();
+                        }
+                    });
+
+                    return true;
+                }
+            }
+
+            ;
+        })
+        ;
+    }
+
+    ;
 }
