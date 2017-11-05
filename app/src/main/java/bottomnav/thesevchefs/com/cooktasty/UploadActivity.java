@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -54,10 +55,6 @@ public class UploadActivity extends AppCompatActivity {
     EditText mName;
     @BindView(R.id.et_recipe_upload_description)
     EditText mDescription;
-    @BindView(R.id.spinner_recipe_duration_hour)
-    Spinner mHours;
-    @BindView(R.id.spinner_recipe_duration_minute)
-    Spinner mMinutes;
     @BindView(R.id.spinner_recipe_ingredients)
     Spinner mIngredients;
     @BindView(R.id.tv_recipe_ingredient_selected)
@@ -90,8 +87,6 @@ public class UploadActivity extends AppCompatActivity {
     String[] ingredientListOutput = null;
     Uri imageUri;
 
-    ArrayAdapter<String> hourAdapter;
-    ArrayAdapter<String> minuteAdapter;
     ArrayAdapter<String> ingredientAdapter;
     ArrayAdapter<String> quantityAdapter;
     ArrayAdapter<String> measurementAdapter;
@@ -129,8 +124,6 @@ public class UploadActivity extends AppCompatActivity {
 
         getIngredientsNameList();
 
-        hourAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, hours);
-        minuteAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, minutes);
         quantityAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, quantity);
         measurementAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, measurement);
         difficultyAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, difficulty);
@@ -152,9 +145,13 @@ public class UploadActivity extends AppCompatActivity {
 
         switch (itemId) {
             case R.id.action_next:
-                String data = getDataInputsPart1();
-                new UploadRecipe().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/upload/", "POST", data, authToken);
-                return true;
+                if (TextUtils.isEmpty(mName.getText()) || TextUtils.isEmpty(mDescription.getText())) {
+                    return true;
+                } else {
+                    String data = getDataInputsPart1();
+                    new UploadRecipe().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "https://hidden-springs-80932.herokuapp.com/api/v1.0/recipe/upload/", "POST", data, authToken);
+                    return true;
+                }
         }
 
         return super.onOptionsItemSelected(item);
@@ -191,12 +188,6 @@ public class UploadActivity extends AppCompatActivity {
     }
 
     public void viewItemsOnSpinner() {
-
-        hourAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mHours.setAdapter(hourAdapter);
-
-        minuteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mMinutes.setAdapter(minuteAdapter);
 
         quantityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mQuantity.setAdapter(quantityAdapter);
@@ -287,8 +278,11 @@ public class UploadActivity extends AppCompatActivity {
         }
         uploadRecipeImage(recipeId);
         uploadRecipeIngredients(recipeId);
+        Intent intent = new Intent(this, UploadRecipeInstructions.class);
+        intent.putExtra("recipeId", recipeId);
+        startActivity(intent);
     }
-    
+
     private void uploadRecipeIngredients(String recipeId) {
         System.out.print(ingredientsPortionToUpload);
         System.out.print(ingredientsToUpload);
@@ -358,7 +352,7 @@ public class UploadActivity extends AppCompatActivity {
 
     }
 
-    public class UploadRecipeImageAsyncTask extends AsyncTask<String, Void, String> {
+    public static class UploadRecipeImageAsyncTask extends AsyncTask<String, Void, String> {
 
         private final Uri imageUri;
         private final ContentResolver cr;

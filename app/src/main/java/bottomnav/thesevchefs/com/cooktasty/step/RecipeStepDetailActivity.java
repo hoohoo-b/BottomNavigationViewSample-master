@@ -1,9 +1,15 @@
 package bottomnav.thesevchefs.com.cooktasty.step;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
@@ -12,6 +18,7 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
+import bottomnav.thesevchefs.com.cooktasty.MainActivity;
 import bottomnav.thesevchefs.com.cooktasty.R;
 import bottomnav.thesevchefs.com.cooktasty.entity.RecipeInstruction;
 import butterknife.BindView;
@@ -32,6 +39,7 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
 
     int currentIndex;
     ArrayList<RecipeInstruction> steps;
+    Context context;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +47,7 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         setContentView(R.layout.recipe_step_detail_activity);
 
         ButterKnife.bind(this);
+        context = this;
 
         Intent intent = getIntent();
 
@@ -93,5 +102,48 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
             .replace(R.id.recipeStepDetailFragmentContainer, recipeStepDetailFragment)
             .commit();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.recipe_step_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int itemId = item.getItemId();
+
+        switch (itemId) {
+            case R.id.main_menu:
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+                builder1.setMessage("Go back to main menu?");
+                builder1.setCancelable(true);
+
+                builder1.setPositiveButton(
+                        "Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent intent = new Intent(context, MainActivity.class);
+                                startActivity(intent);
+                                dialog.cancel();
+                            }
+                        });
+
+                builder1.setNegativeButton(
+                        "No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

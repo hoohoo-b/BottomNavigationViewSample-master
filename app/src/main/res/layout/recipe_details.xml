@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="Recipe Name"
+            android:text="@string/recipe_name"
             android:textAllCaps="true"
             android:textColor="@android:color/black"
             android:textSize="40sp"
@@ -104,8 +104,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_toRightOf="@+id/imageView3"
                     android:gravity="center_vertical"
-                    android:text="recipe time"
-                    android:textAlignment="textStart" />
+                    android:text="@string/recipe_time" />
 
             </RelativeLayout>
 
@@ -130,7 +129,7 @@
                     android:layout_marginLeft="0dp"
                     android:layout_toRightOf="@+id/imageView2"
                     android:layout_weight="0.05"
-                    android:text="recipe difficulty" />
+                    android:text="@string/recipe_difficulty" />
 
             </RelativeLayout>
 

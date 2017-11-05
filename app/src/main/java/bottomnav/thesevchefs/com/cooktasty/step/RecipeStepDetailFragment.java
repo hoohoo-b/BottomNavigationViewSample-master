@@ -114,31 +114,32 @@ public class RecipeStepDetailFragment extends Fragment {
 
     private void setup() throws IOException {
         // The thumbnail uri contains mp4 instead of image, so we'll load it into the video player
-        if (step.image_url != null) {
+//        if (step.image_url != null) {
             setupThumbnail(step);
 //            File file = ImageToVideoConverter.setvideo(getActivity(), step.image_url);
 //            setupVideoPlayer(file, step);
-        } else {
-            videoContainer.setVisibility(View.INVISIBLE);
-            ViewGroup.LayoutParams layoutParams = videoContainer.getLayoutParams();
-            layoutParams.height = 0;
-            videoContainer.setLayoutParams(layoutParams);
-
-            // Setup default view
-            defaultMediaImageView.setVisibility(View.VISIBLE);
-            Picasso
-                    .with(getActivity())
-                    .load(R.drawable.cooktasty_logo)
-                    .into(defaultMediaImageView);
-        }
-
+//        } else {
+//            videoContainer.setVisibility(View.INVISIBLE);
+//            ViewGroup.LayoutParams layoutParams = videoContainer.getLayoutParams();
+//            layoutParams.height = 0;
+//            videoContainer.setLayoutParams(layoutParams);
+//
+//            // Setup default view
+//            defaultMediaImageView.setVisibility(View.VISIBLE);
+//            Picasso
+//                    .with(getActivity())
+//                    .load(R.drawable.cooktasty_logo)
+//                    .into(defaultMediaImageView);
+//        }
+//
         recipeStepDescriptionTextView.setText(step.instruction);
     }
 
     private void setupThumbnail(RecipeInstruction step) {
-        String url = step.image_url;
-        Uri uri = Uri.parse(url);
-        String extension = "";
+        if (step.image_url != null) {
+            String url = step.image_url;
+            Uri uri = Uri.parse(url);
+//            String extension = "";
 
 //        int i = url.lastIndexOf('.');
 //        if (i > 0) {
@@ -149,10 +150,14 @@ public class RecipeStepDetailFragment extends Fragment {
 //            return;
 //        }
 
-        Picasso
-                .with(getActivity())
-                .load(uri)
-                .into(defaultMediaImageView);
+            Picasso
+                    .with(getActivity())
+                    .load(uri)
+                    .into(defaultMediaImageView);
+
+        } else {
+            defaultMediaImageView.setImageDrawable(getResources().getDrawable(R.drawable.cooktasty_logo));
+        }
 
         mProgressBar.setProgress(i);
         final int time = (int) step.time_required.getTime();
@@ -163,8 +168,9 @@ public class RecipeStepDetailFragment extends Fragment {
                 Log.v("Log_tag", "Tick of Progress" + i + " " + millisUntilFinished);
                 i++;
                 mProgressBar.setProgress((int) i * 100 / (time / 1000));
-                mTimeRemaining.setText(String.format("%d min %d sec",
-                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
+                mTimeRemaining.setText(String.format("%d h %d min %d s",
+                        TimeUnit.MILLISECONDS.toHours(millisUntilFinished),
+                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisUntilFinished)),
                         TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
 
@@ -175,7 +181,7 @@ public class RecipeStepDetailFragment extends Fragment {
                 //Do what you want
                 i++;
                 mProgressBar.setProgress(100);
-                mTimeRemaining.setText("0 min 0 sec");
+                mTimeRemaining.setText("0 h 0 min 0 s");
             }
         };
         mCountDownTimer.start();
