@@ -40,7 +40,6 @@ import butterknife.OnEditorAction;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    private Boolean loginDebugMode = false;
     private static final int REQUEST_SIGNUP = 0;
 
     @BindView(R.id.email) AutoCompleteTextView mEmailView;
@@ -99,16 +98,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
-
-        if (loginDebugMode) {
-            MyApplication.setAuthToken("32ff65c24c42a5efa074ad4e5804f098bc0f8447");
-            MyApplication.setEmail("admin@example.com");
-
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-
-            return true;
-        }
 
         // Reset errors.
         mEmailView.setError(null);
