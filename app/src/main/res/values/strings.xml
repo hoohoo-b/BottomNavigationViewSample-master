@@ -135,5 +135,8 @@
     <string name="next_step">Next Step</string>
     <string name="done">Done</string>
     <string name="main_menu">Main Menu</string>
+    <string name="cooktasty">Cooktasty</string>
+    <string name="search_hint">Search Recipe</string>
+
 
 </resources>

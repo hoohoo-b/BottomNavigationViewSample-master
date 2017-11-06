@@ -2,12 +2,12 @@ package bottomnav.thesevchefs.com.cooktasty;
 
 // FOR MAIN PAGE AFTER LOGIN
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -15,11 +15,19 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 public class MainActivity extends AppCompatActivity {
 
     static final int REQUEST_TAKE_PHOTO = 1;
+    String authToken = "";
+    Context mContext;
+    RecipeListFragment recipeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (MyApplication.getAuthToken() != null) {
+            authToken = MyApplication.getAuthToken();
+        }
+        mContext = this;
 
         AHBottomNavigation bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
 
@@ -69,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 //        load default fragment
-        RecipeListFragment recipeFragment = new RecipeListFragment();
+        recipeFragment = new RecipeListFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment).commit();
 
     }
@@ -91,4 +99,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void clickNew(View view) {
+        long recipeId = recipeFragment.getRecommendedRecipeId();
+        Intent intentToStartRecipeDetailActivity = new Intent(this, RecipeDetailsActivity.class);
+        intentToStartRecipeDetailActivity.putExtra("RecipeId", recipeId);
+        startActivity(intentToStartRecipeDetailActivity);
+
+    }
 }

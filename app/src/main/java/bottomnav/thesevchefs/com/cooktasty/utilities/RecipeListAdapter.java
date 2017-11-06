@@ -87,4 +87,8 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
         void onListItemClick(Recipe recipe);
     }
 
+    public void clearList() {
+        recipeList.clear();
+    }
+
 }
