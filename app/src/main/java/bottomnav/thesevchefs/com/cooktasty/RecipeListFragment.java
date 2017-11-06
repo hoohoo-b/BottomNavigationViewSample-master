@@ -1,30 +1,30 @@
 package bottomnav.thesevchefs.com.cooktasty;
 
-import android.app.Activity;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
-import android.view.*;
-import android.widget.ImageButton;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 import com.android.volley.VolleyError;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import bottomnav.thesevchefs.com.cooktasty.cooktastyapi.APICallback;
@@ -32,6 +32,9 @@ import bottomnav.thesevchefs.com.cooktasty.cooktastyapi.RecipeAPI;
 import bottomnav.thesevchefs.com.cooktasty.entity.Recipe;
 import bottomnav.thesevchefs.com.cooktasty.utilities.EndlessRecyclerViewScrollListener;
 import bottomnav.thesevchefs.com.cooktasty.utilities.RecipeListAdapter;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 import static bottomnav.thesevchefs.com.cooktasty.cooktastyapi.RecipeAPI.getRecipeListAPI;
 
@@ -53,6 +56,10 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Li
     ImageView mRecommendedImage;
     @BindView(R.id.tv_recommended_recipe_name)
     TextView mRecommendedName;
+    @BindView(R.id.recommended_layout)
+    ConstraintLayout mRecommendedLayout;
+    @BindView(R.id.recipe_linear_layout)
+    LinearLayout mLinearLayout;
 
     private Recipe recommendedRecipe;
 
@@ -178,6 +185,7 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Li
                 getRecipeListAPI(getActivity(), authToken, 1, query, new APICallback() {
                     @Override
                     public void onSuccess(Object result) {
+                        mRecommendedLayout.setVisibility(View.GONE);
                         mRecipeListAdapter.clearList();
                         List<Recipe> recipeList = (List<Recipe>) result;
                         mRecipeListAdapter.addRecipeListData(recipeList);
@@ -196,11 +204,13 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Li
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (TextUtils.isEmpty(newText)) {
+                    mRecommendedLayout.setVisibility(View.VISIBLE);
                     return false;
                 } else {
                     getRecipeListAPI(getActivity(), authToken, 1, newText, new APICallback() {
                         @Override
                         public void onSuccess(Object result) {
+                            mRecommendedLayout.setVisibility(View.GONE);
                             mRecipeListAdapter.clearList();
                             List<Recipe> recipeList = (List<Recipe>) result;
                             mRecipeListAdapter.addRecipeListData(recipeList);

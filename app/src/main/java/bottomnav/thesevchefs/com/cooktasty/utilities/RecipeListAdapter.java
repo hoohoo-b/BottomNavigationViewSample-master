@@ -1,9 +1,7 @@
 package bottomnav.thesevchefs.com.cooktasty.utilities;
 
 import android.content.Context;
-import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
